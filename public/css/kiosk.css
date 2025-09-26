@@ -1,0 +1,404 @@
+:root {
+    --teal-700: #0e90a6;
+    --teal-800: #087a93;
+    --teal-900: #0a6a80;
+    --card-shadow: 0 15px 35px rgba(0, 0, 0, .18);
+    --inner-shadow: inset 0 0 0 2px rgba(255, 255, 255, .25), inset 0 12px 24px rgba(255, 255, 255, .06);
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    color: #043a47;
+    background: #0a6a80;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Lock canvas to 1180 x 820 and center it */
+.viewport {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.stage {
+    width: 1180px;
+    height: 820px;
+    position: relative;
+    overflow: hidden;
+    background: url('../assets/icons/background_kiosk.png') center top/cover no-repeat;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, .30);
+}
+
+.wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 28px 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    height: 130px;
+}
+
+.hero {
+    margin-top: 6px;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+.photo-panel {
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    background: #fff;
+    padding: 0;
+    position: relative;
+    height: 540px;
+}
+
+.slides {
+    position: absolute;
+    inset: 0;
+}
+
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity .6s ease;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+.dots {
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, .7);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+    cursor: pointer;
+}
+
+.dot.active {
+    width: 22px;
+    background: #fff;
+}
+
+.center-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+}
+
+#trackingForm {
+    width: min(640px, 100%);
+    position: relative;
+}
+
+.input-pill {
+    width: 75%;
+    border-radius: 42px;
+    padding: 16px 28px;
+    font-size: 20px;
+    text-align: center;
+    background: #0f5f7f;
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, .85);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .25), inset 0 0 0 1px rgba(255, 255, 255, .25);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-pill:focus {
+    border-color: #fff;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .25), inset 0 0 0 2px rgba(255, 255, 255, .5);
+    transform: translateY(-2px);
+}
+
+.input-pill:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.track-btn {
+    position: absolute;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #fff;
+    color: #0f5f7f;
+    border: none;
+    padding: 20px 28px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .2);
+    transition: all 0.3s ease;
+}
+
+.track-btn:hover {
+    background: #f0f0f0;
+    transform: translateY(-50%) scale(1.05);
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    width: 100%;
+}
+
+.card {
+    border-radius: 18px;
+    background: #fff;
+    padding: 46px 28px;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+    transition: transform .25s ease, box-shadow .25s ease;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, .22);
+}
+
+.card img {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 12px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 12px rgba(0, 0, 0, .18));
+}
+
+.card h3 {
+    margin: 0;
+    color: #1f3a4a;
+    font-weight: 600;
+    font-size: 28px;
+}
+
+.card p {
+    margin: 6px 0 0;
+    color: #375e73;
+    font-size: 24px;
+}
+
+.mayor {
+    display: none;
+}
+
+/* Chat button + footer */
+.chat {
+    position: absolute;
+    right: 30px;
+    bottom: 120px;
+    background: #fff;
+    color: #086f86;
+    border: none;
+    width: 66px;
+    height: 66px;
+    border-radius: 16px;
+    box-shadow: 0 22px 35px rgba(0, 0, 0, .28);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.chat img {
+    width: 34px;
+    height: 34px;
+}
+
+.footer {
+    position: absolute;
+    right: 22px;
+    bottom: 8px;
+    color: rgba(255, 255, 255, .8);
+    font-size: 12px;
+}
+
+/* Mobile and Tablet Responsive Design */
+@media (max-width: 1200px) {
+    .stage {
+        width: 95vw;
+        height: 90vh;
+        max-width: 1000px;
+        max-height: 700px;
+    }
+
+    .wrapper {
+        padding: 20px 15px 15px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .hero {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .mayor {
+        display: none;
+    }
+
+    .photo-panel {
+        height: 300px;
+        order: 2;
+    }
+
+    .center-col {
+        order: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .stage {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        max-width: none;
+        max-height: none;
+    }
+
+    .wrapper {
+        padding: 15px 10px 10px;
+    }
+
+    .header {
+        height: 80px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .card {
+        padding: 30px 20px;
+    }
+
+    .card img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .card h3 {
+        font-size: 24px;
+    }
+
+    .card p {
+        font-size: 20px;
+    }
+
+    .input-pill {
+        font-size: 18px;
+        padding: 14px 24px;
+        width: 80%;
+    }
+
+    .track-btn {
+        padding: 16px 24px;
+        font-size: 12px;
+    }
+
+    .chat {
+        width: 56px;
+        height: 56px;
+        right: 20px;
+        bottom: 100px;
+    }
+
+    .chat img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .footer {
+        right: 15px;
+        bottom: 5px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .input-pill {
+        font-size: 16px;
+        padding: 12px 20px;
+        width: 85%;
+    }
+
+    .track-btn {
+        padding: 14px 20px;
+        font-size: 11px;
+    }
+
+    .card {
+        padding: 25px 15px;
+    }
+
+    .card img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .card h3 {
+        font-size: 20px;
+    }
+
+    .card p {
+        font-size: 18px;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    .card:hover {
+        transform: none;
+        box-shadow: var(--card-shadow);
+    }
+
+    .track-btn:hover {
+        background: #fff;
+        transform: translateY(-50%);
+    }
+
+    .card:active {
+        transform: scale(0.98);
+    }
+
+    .track-btn:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+}

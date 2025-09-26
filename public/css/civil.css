@@ -1,0 +1,39 @@
+.services-panel {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, .18);
+    border: 1px solid rgba(4, 58, 71, 0.08);
+    max-width: 940px;
+    margin: 0 auto;
+}
+
+.civil-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px 38px;
+}
+
+.civil-grid .service-tile {
+    padding: 36px 22px;
+    border-radius: 16px;
+    border: 1px solid rgba(4, 58, 71, 0.15);
+}
+
+.civil-grid .service-icon {
+    height: 130px;
+}
+
+.civil-grid .service-title {
+    font-size: 18px;
+}
+
+@media (max-width: 900px) {
+    .services-panel {
+        padding: 20px;
+    }
+
+    .civil-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+}

@@ -51,7 +51,6 @@ chatbot-service/node_modules/
 
 # Laravel Mix
 /public/js/
-/public/css/
 /public/mix-manifest.json
 
 # Testing
