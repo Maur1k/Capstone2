@@ -1,214 +1,79 @@
-# Click2Serve - Transfer & Setup Guide
+# Transfer and Setup Guide
 
-## 📦 Before Transferring (On Source Device)
+This guide is for a developer cloning the public Git repository. It deliberately does not transfer local credentials, uploaded files, logs, or dependency folders.
 
-### Files to EXCLUDE from ZIP (to reduce size):
-These folders will be regenerated on the new device:
-- `Click2Serve/Click2Serve/vendor/` (PHP dependencies - ~150MB)
-- `print-service/node_modules/` (~50MB)
-- `chatbot-service/node_modules/` (~30MB)
-- `Click2Serve/Click2Serve/storage/logs/*.log` (optional)
-- `Click2Serve/Click2Serve/storage/framework/cache/*`
-- `Click2Serve/Click2Serve/storage/framework/sessions/*`
-- `Click2Serve/Click2Serve/storage/framework/views/*`
+## Before publishing
 
-### Files to INCLUDE (Important):
-- `Click2Serve/Click2Serve/.env` (contains your database and API credentials)
-- All batch files (`.bat`)
-- All other project files
+Check the repository before changing its visibility:
 
----
-
-## 🖥️ Setup on New Device
-
-### Prerequisites
-1. **XAMPP** (includes PHP 8.1+ and MySQL/MariaDB)
-   - Download: https://www.apachefriends.org/
-   - Install to `C:\xampp`
-
-2. **Composer** (PHP package manager)
-   - Download: https://getcomposer.org/download/
-   - Install globally
-
-3. **Node.js 16+** (for print and chatbot services)
-   - Download: https://nodejs.org/
-   - Install LTS version
-
----
-
-## 📋 Step-by-Step Setup
-
-### Step 1: Extract the ZIP
-```
-Extract to: C:\xampp\htdocs\
-```
-Final structure should be:
-```
-C:\xampp\htdocs\Click2Serve\
-├── Click2Serve\     <- Laravel app
-├── print-service\
-├── chatbot-service\
-└── docs\
-```
-
-### Step 2: Start XAMPP Services
-1. Open XAMPP Control Panel
-2. Start **Apache**
-3. Start **MySQL**
-
-### Step 3: Install Dependencies
-```
-Double-click: C:\xampp\htdocs\Click2Serve\Click2Serve\setup-new-device.bat
-```
-This will:
-- Install PHP dependencies (composer install)
-- Generate application key
-- Clear caches
-- Create storage link
-- Install Node.js dependencies for services
-
-### Step 4: Setup Database
-```
-Double-click: C:\xampp\htdocs\Click2Serve\Click2Serve\FRESH_SETUP.bat
-```
-This will:
-- Create the `click2serve` database
-- Run all migrations
-- Seed default data
-
-**Alternative Manual Setup:**
 ```powershell
-cd C:\xampp\htdocs\Click2Serve\Click2Serve
-php artisan migrate --force
-php artisan db:seed --force
+git status --short
+git ls-files | Select-String '\.env$|storage/logs|node_modules|vendor|phpinfo|\.sql$'
 ```
 
-### Step 5: Configure Environment (if needed)
-Edit `Click2Serve\Click2Serve\.env` file:
-```env
-APP_URL=http://127.0.0.1:8000
+The following must remain local and uncommitted:
 
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=click2serve
-DB_USERNAME=root
-DB_PASSWORD=
+- `.env` and all API keys
+- `vendor/`, `node_modules/`, and `public/storage`
+- `storage/logs/` and generated framework cache
+- Real uploaded documents, phone numbers, passwords, and production database exports
 
-# SMS Service (Semaphore)
-SEMAPHORE_API_KEY=your_api_key_here
-SEMAPHORE_SENDER_NAME=Click2Serve
-SEMAPHORE_ENABLED=true
-```
+Do not add a production or development database dump to the public repository. Create local data with migrations and seeders instead.
 
----
+## New developer setup
 
-## 🚀 Running the Application
+1. Install PHP 8.2+, Composer 2, Node.js 20 LTS+, and MySQL/MariaDB.
+2. Start MySQL from XAMPP or your local database service.
+3. Clone the repository and enter it:
 
-### Quick Start (Recommended)
-```
-Double-click: C:\xampp\htdocs\Click2Serve\Click2Serve\start-click2serve.bat
-```
-This starts all services automatically.
-
-### Manual Start
-
-**Terminal 1 - Laravel Server:**
 ```powershell
-cd C:\xampp\htdocs\Click2Serve\Click2Serve
-php artisan serve
+git clone https://github.com/Maur1k/Capstone2.git
+Set-Location .\Capstone2
 ```
-Access: http://127.0.0.1:8000
 
-**Terminal 2 - Print Service:**
+4. Install dependencies and create local configuration:
+
 ```powershell
-cd C:\xampp\htdocs\Click2Serve\print-service
-npm start
+composer install
+Copy-Item .env.example .env
+php artisan key:generate
+npm install
+npm run build
 ```
-Runs on: http://localhost:4000
 
-**Terminal 3 - Chatbot Service:**
+5. Create and seed the development database:
+
 ```powershell
-cd C:\xampp\htdocs\Click2Serve\chatbot-service
-npm start
-```
-Runs on: http://localhost:5000
-
----
-
-## 🔗 Access URLs
-
-| Feature | URL |
-|---------|-----|
-| Kiosk Mode | http://127.0.0.1:8000 |
-| Website | http://127.0.0.1:8000/website |
-| Admin Panel | http://127.0.0.1:8000/admin |
-| Officer Dashboard | http://127.0.0.1:8000/officer |
-| Service Tracker | http://127.0.0.1:8000/track |
-| Book Appointment | http://127.0.0.1:8000/service |
-
----
-
-## 🔐 Default Login Credentials
-
-### Admin
-- URL: http://127.0.0.1:8000/admin
-- Email: `admin@example.com`
-- Password: `password`
-
-### Officer Accounts (after seeding)
-- Civil Registry: `civil@gmail.com` / `password`
-- BPLO: `bplo@gmail.com` / `password`
-- CTRU: `ctru@gmail.com` / `password`
-- Veterinary: `vet@gmail.com` / `password`
-
----
-
-## ❗ Troubleshooting
-
-### "Class not found" errors
-```powershell
-cd C:\xampp\htdocs\Click2Serve\Click2Serve
-composer dump-autoload
-php artisan optimize:clear
+& 'C:\xampp\mysql\bin\mysql.exe' -u root -e "CREATE DATABASE IF NOT EXISTS click2serve CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+php artisan migrate --seed
 ```
 
-### Database connection errors
-1. Ensure MySQL is running in XAMPP
-2. Check `.env` database credentials
-3. Verify database `click2serve` exists
+6. Finish Laravel setup and run the app:
 
-### Storage/Permission errors
 ```powershell
 php artisan storage:link
-```
-On Windows, run as Administrator if needed.
-
-### CSS/JS not loading
-```powershell
-php artisan cache:clear
-php artisan view:clear
+php artisan optimize:clear
+php artisan serve --host=127.0.0.1 --port=8000
 ```
 
-### SMS not sending
-1. Check `SEMAPHORE_API_KEY` in `.env`
-2. Ensure `SEMAPHORE_ENABLED=true`
-3. Check Laravel logs: `storage/logs/laravel.log`
+Open <http://127.0.0.1:8000>.
 
----
+When `php` is not recognized, replace `php` with `& 'C:\xampp\php\php.exe'`.
 
-## ✅ Setup Checklist
+## Optional integrations
 
-- [ ] XAMPP installed
-- [ ] Composer installed
-- [ ] Node.js installed
-- [ ] XAMPP Apache & MySQL running
-- [ ] `setup-new-device.bat` completed
-- [ ] `FRESH_SETUP.bat` completed
-- [ ] `start-click2serve.bat` running
-- [ ] Can access http://127.0.0.1:8000
-- [ ] Can login to admin panel
+Printing, chatbot requests, and SMS require separate services or credentials. They are not needed for the basic Laravel app. Configure them only in `.env`, never in committed files. See the integration table in [README.md](README.md).
 
----
+## Troubleshooting
 
-**Last Updated:** November 2025
+**Database connection error:** Start MySQL, confirm `DB_*` values in `.env`, and verify that the `click2serve` database exists.
+
+**Missing class error:** Run `composer dump-autoload` and `php artisan optimize:clear`.
+
+**Missing assets:** Run `npm install` followed by `npm run build`.
+
+**Storage error:** Run `php artisan storage:link`. If the link already exists, this step is complete.
+
+**Port already in use:** Start Laravel on another port, for example `php artisan serve --port=8001`, and update `APP_URL` if needed.
+
+**Feature tests fail during setup:** Use an isolated test database and run the current migrations. Never point tests at the development database.

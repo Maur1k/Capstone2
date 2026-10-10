@@ -53,9 +53,7 @@ class DatabaseSeeder extends Seeder
         $this->command->table(
             ['Role', 'Email', 'Password'],
             [
-                ['Super Admin', 'admin@gmail.com', 'admin123'],
-                ['Civil Officer', 'civil@gmail.com', 'civil123'],
-                ['BPLO Officer', 'bplo@gmail.com', 'bplo123'],
+                ['Super Admin', env('SEED_ADMIN_EMAIL', 'admin@example.test'), 'value from SEED_ADMIN_PASSWORD'],
             ]
         );
         $this->command->newLine();

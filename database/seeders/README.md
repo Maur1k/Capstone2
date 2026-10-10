@@ -40,19 +40,16 @@ php artisan db:seed --class=SeederName
 |--------|-------------|-------------|
 | `TestQueueSeeder` | Sample queue data for testing | `php artisan db:seed --class=TestQueueSeeder` |
 
-## Default Login Credentials
+## Local Login Credentials
 
-After running `AdminSeeder`, you can login with:
+Before seeding, set these values in `.env`:
 
-| Role | Email | Password | Access |
-|------|-------|----------|--------|
-| Super Admin | admin@gmail.com | admin123 | Full access |
-| Civil Registry Officer | civil@gmail.com | civil123 | Civil Registry Office |
-| BPLO Officer | bplo@gmail.com | bplo123 | Business Permits |
-| CTRU Officer | ctru@gmail.com | ctru123 | Transportation |
-| Engineering Officer | engineering@gmail.com | eng123 | Engineering |
-| Social Welfare Officer | social@gmail.com | social123 | Social Welfare |
-| Veterinary Officer | veterinary@gmail.com | vet123 | Veterinary |
+```env
+SEED_ADMIN_EMAIL=admin@example.test
+SEED_ADMIN_PASSWORD=change-me-local
+```
+
+`AdminSeeder` creates the super-admin account from those values. Do not commit `.env`, production passwords, or database exports.
 
 ## Queue Settings
 
@@ -80,19 +77,14 @@ The `TestQueueSeeder` creates sample queue items for testing:
 
 ## Transferring Data Between PCs
 
-To transfer your database to another PC:
+To transfer non-sensitive structure and sample content to another PC:
 
-1. **Export database:**
-   ```bash
-   mysqldump -u root -p click2serve > click2serve_backup.sql
-   ```
-
-2. **Or run seeders on the new PC:**
+1. **Avoid exporting production data to a public repository.** For a clean developer database, run:
    ```bash
    php artisan migrate:fresh --seed
    ```
 
-3. **For test data:**
+2. **For test data:**
    ```bash
    php artisan db:seed --class=TestQueueSeeder
    ```

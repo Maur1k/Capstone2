@@ -12,10 +12,10 @@ class AdminSeeder extends Seeder
     {
         // Super Admin account
         Admin::updateOrCreate(
-            ['email' => 'admin@gmail.com'],
+            ['email' => env('SEED_ADMIN_EMAIL', 'admin@example.test')],
             [
                 'name' => 'Super Admin',
-                'password' => Hash::make('admin123'),
+                'password' => Hash::make(env('SEED_ADMIN_PASSWORD', 'change-me-local')),
                 'role' => 'super_admin',
                 'is_active' => true,
                 'department' => null,

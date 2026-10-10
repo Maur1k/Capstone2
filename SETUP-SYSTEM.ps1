@@ -245,8 +245,8 @@ Write-Host ""
 Write-Host "Next Steps:" -ForegroundColor Yellow
 Write-Host "1. Review and update .env file with your settings" -ForegroundColor White
 Write-Host "2. Make sure XAMPP MySQL is running" -ForegroundColor White
-Write-Host "3. Run 'start-click2serve.bat' to start all services" -ForegroundColor White
-Write-Host "   OR run 'php artisan serve' to start just the Laravel server" -ForegroundColor White
+Write-Host "3. Run 'php artisan serve --host=127.0.0.1 --port=8000' to start Laravel" -ForegroundColor White
+Write-Host "   Optional print/chatbot services must be started separately." -ForegroundColor White
 Write-Host ""
 Write-Host "Access URLs:" -ForegroundColor Yellow
 Write-Host "  - Kiosk Mode:    http://127.0.0.1:8000" -ForegroundColor White
