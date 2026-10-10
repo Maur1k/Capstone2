@@ -80,22 +80,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Python SMS Service Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Configuration for the Python SMS service that handles Semaphore integration
-    |
-    */
-    'python_sms' => [
-        'python_path' => env('PYTHON_PATH', 'py'),
-        'script_path' => env('PYTHON_SMS_SCRIPT_PATH', 'sms-service/send_sms.py'),
-        'enabled' => env('PYTHON_SMS_ENABLED', true),
-        'test_number' => env('PYTHON_SMS_TEST_NUMBER', '639219580125'),
-        'use_test_number' => env('PYTHON_SMS_USE_TEST_NUMBER', true),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Chatbot Service Configuration
     |--------------------------------------------------------------------------
     |

@@ -62,7 +62,7 @@ When `php` is not recognized, replace `php` with `& 'C:\xampp\php\php.exe'`.
 
 ## Optional integrations
 
-Printing, chatbot requests, and SMS require separate services or credentials. They are not needed for the basic Laravel app. Configure them only in `.env`, never in committed files. See the integration table in [README.md](README.md).
+Printing, chatbot requests, and SMS require separate services or credentials. They are not needed for the basic Laravel app. Configure them only in `.env`, never in committed files. See the integration table in [README.md](../README.md).
 
 ## Troubleshooting
 

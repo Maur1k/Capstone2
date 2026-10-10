@@ -104,6 +104,6 @@ Before opening the repository publicly, confirm that `.env`, API keys, database 
 
 More information:
 
-- [Transfer and setup guide](TRANSFER_GUIDE.md)
-- [Kiosk network guide](kiok-setup-guide.md)
-- [End-user and staff manual](Click2Serve%20-%20User%20Manual.md)
+- [Developer setup guide](docs/DEVELOPER_SETUP.md)
+- [Kiosk network guide](docs/KIOSK_NETWORK_SETUP.md)
+- [End-user and staff manual](docs/USER_MANUAL.md)
