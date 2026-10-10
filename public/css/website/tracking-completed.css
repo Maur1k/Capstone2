@@ -1,0 +1,133 @@
+body {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #007a9d, #005f7f);
+    margin: 0;
+    padding: 0;
+}
+
+/* Section */
+.service-tracking {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.service-tracking h1 {
+    color: #fff;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+/* Card */
+.card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 900px;
+    margin: auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Reference info */
+.reference {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #333;
+}
+
+.reference .status {
+    color: #ff9800;
+    font-weight: 600;
+}
+
+.name {
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.info {
+    margin-bottom: 20px;
+    color: #555;
+}
+
+/* Progress Tracker */
+.progress-container {
+    --step-size: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    margin-top: 40px;
+    padding: 0 calc(var(--step-size) / 2);
+}
+
+.progress-container::before {
+    content: '';
+    position: absolute;
+    top: calc(var(--step-size) / 2);
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: #008CBA;
+    /* blue connecting line */
+    z-index: 1;
+    transform: translateY(-50%);
+    border-radius: 4px;
+}
+
+.progress-container>div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+/* ---- Circles all blue ---- */
+.step {
+    width: var(--step-size);
+    height: var(--step-size);
+    background: #fff;
+    border: 4px solid #008CBA;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    box-sizing: border-box;
+    box-shadow: 0 0 18px rgba(0, 140, 186, 0.25);
+}
+
+.step img {
+    width: calc(var(--step-size) * 0.52);
+    height: auto;
+    display: block;
+}
+
+.step-label {
+    margin-top: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+    .card {
+        padding: 20px;
+        max-width: 95%;
+    }
+
+    .progress-container {
+        --step-size: 64px;
+        padding: 0 calc(var(--step-size) / 2);
+    }
+
+    .step-label {
+        font-size: 13px;
+    }
+}

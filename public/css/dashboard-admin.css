@@ -1,0 +1,29 @@
+/* Dashboard Admin CSS */
+
+/* Loading & Empty States */
+.loading-state {
+    text-align: center;
+    padding: 20px;
+    color: var(--gray-500);
+}
+
+.error-state {
+    text-align: center;
+    padding: 20px;
+    color: #ef4444;
+}
+
+/* Department Info in Logs */
+.department-info {
+    color: var(--gray-500);
+    font-size: 0.75rem;
+}
+
+/* Utility */
+.d-inline {
+    display: inline;
+}
+
+/* SVG Gradients (if moved from inline, though often better inline for SVG defs) */
+/* We will keep SVG defs inline as they are attributes, but we can class the stops if needed. 
+   For now, we focused on HTML/JS inline styles. */

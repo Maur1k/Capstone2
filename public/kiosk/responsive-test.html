@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Navigation Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .breakpoint-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .breakpoint-info h3 {
+            margin: 0 0 10px 0;
+            color: #1976d2;
+        }
+        
+        .breakpoint-info p {
+            margin: 5px 0;
+            color: #424242;
+        }
+        
+        /* Copy the navigation styles from index.html */
+        :root {
+            --teal-700: #0e90a6;
+            --teal-800: #087a93;
+            --teal-900: #0a6a80;
+            --card-shadow: 0 15px 35px rgba(0, 0, 0, .18);
+            --inner-shadow: inset 0 0 0 2px rgba(255, 255, 255, .25), inset 0 12px 24px rgba(255, 255, 255, .06);
+            --input-border: #e2e8f0;
+            --input-focus: #0e90a6;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --form-bg: #ffffff;
+            --input-bg: #f8f9fa;
+            --gradient-bg: linear-gradient(180deg, #0e90a6 0%, #087a93 50%, #0a6a80 100%);
+        }
+        
+        #ui { 
+            position: relative; 
+            top: 0; 
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            align-items: center;
+            max-width: 95vw;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 20px;
+            background: var(--gradient-bg);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .nav-control {
+            display: flex;
+            align-items: center;
+            background: var(--form-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 25px;
+            padding: 0;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            flex-shrink: 1;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+        
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        .zoom-btn {
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            border: none;
+            color: var(--teal-700);
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border-radius: 25px;
+        }
+        
+        .destination-input,
+        .destination-select,
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 16px;
+            padding: 15px 20px;
+            outline: none;
+            min-width: 250px;
+            font-family: 'Arial', sans-serif;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border-radius: 0;
+            min-height: 44px;
+        }
+        
+        .dropdown-arrow,
+        .search-icon {
+            color: var(--teal-700);
+            font-size: 18px;
+            margin-right: 20px;
+            pointer-events: none;
+        }
+        
+        /* Responsive breakpoints - same as index.html */
+        @media (min-width: 1200px) {
+            #ui {
+                gap: 25px;
+                max-width: 90vw;
+            }
+            
+            .nav-control {
+                padding: 10px;
+                border-radius: 35px;
+                flex-shrink: 0;
+            }
+            
+            .zoom-btn {
+                width: 65px;
+                height: 65px;
+                font-size: 30px;
+            }
+            
+            .destination-input,
+            .destination-select,
+            .search-input {
+                font-size: 20px;
+                padding: 20px 30px;
+                min-width: 250px;
+                max-width: 350px;
+                flex: 1;
+            }
+        }
+        
+        @media (min-width: 1024px) and (max-width: 1199px) {
+            #ui {
+                gap: 20px;
+                max-width: 95vw;
+                flex-wrap: nowrap;
+                justify-content: center;
+            }
+            
+            .nav-control {
+                padding: 8px;
+                border-radius: 30px;
+                flex-shrink: 1;
+                min-width: 0;
+            }
+            
+            .zoom-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+            
+            .destination-input,
+            .destination-select,
+            .search-input {
+                font-size: 18px;
+                padding: 18px 25px;
+                min-width: 200px;
+                max-width: 300px;
+                flex: 1;
+            }
+        }
+        
+        @media (min-width: 768px) and (max-width: 1023px) {
+            #ui {
+                left: 0;
+                right: 0;
+                transform: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+                max-width: none;
+            }
+            
+            .nav-control {
+                padding: 8px;
+                border-radius: 25px;
+                min-height: 60px;
+                width: 100%;
+                max-width: none;
+            }
+            
+            .zoom-controls {
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            .zoom-btn {
+                width: 55px;
+                height: 55px;
+                font-size: 26px;
+            }
+            
+            .destination-input,
+            .destination-select,
+            .search-input {
+                font-size: 16px;
+                padding: 15px 20px;
+                min-width: 100%;
+                flex: 1;
+            }
+        }
+        
+        @media (min-width: 481px) and (max-width: 767px) {
+            #ui {
+                left: 0;
+                right: 0;
+                transform: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            
+            .nav-control {
+                padding: 8px;
+                border-radius: 25px;
+                min-height: 55px;
+            }
+            
+            .zoom-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+            
+            .destination-input,
+            .destination-select,
+            .search-input {
+                font-size: 16px;
+                padding: 15px 20px;
+                min-width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #ui {
+                left: 0;
+                right: 0;
+                transform: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .nav-control {
+                padding: 6px;
+                border-radius: 20px;
+                min-height: 50px;
+            }
+            
+            .zoom-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+            
+            .destination-input,
+            .destination-select,
+            .search-input {
+                font-size: 14px;
+                padding: 12px 16px;
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Responsive Navigation Test</h1>
+        
+        <div class="breakpoint-info">
+            <h3>Current Breakpoint</h3>
+            <p id="current-breakpoint">Detecting...</p>
+            <p id="screen-size">Screen size: <span id="width"></span> x <span id="height"></span></p>
+        </div>
+        
+        <!-- Navigation UI (same structure as index.html) -->
+        <div id="ui">
+            <!-- Floor Selector -->
+            <div class="nav-control">
+                <select class="destination-select">
+                    <option>Ground Floor</option>
+                    <option>First Floor</option>
+                    <option>Second Floor</option>
+                </select>
+                <span class="dropdown-arrow">▼</span>
+            </div>
+            
+            <!-- Zoom Controls -->
+            <div class="nav-control zoom-controls">
+                <button class="zoom-btn">−</button>
+                <input type="text" class="destination-input" placeholder="Input Destination" />
+                <button class="zoom-btn">+</button>
+            </div>
+            
+            <!-- Search Control -->
+            <div class="nav-control search-control">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search POI" />
+            </div>
+        </div>
+        
+        <div class="breakpoint-info">
+            <h3>Test Instructions</h3>
+            <p>1. Resize your browser window to test different breakpoints</p>
+            <p>2. Check that navigation elements don't overflow</p>
+            <p>3. Verify that all elements remain accessible and properly sized</p>
+            <p>4. Test on actual tablet devices for touch interaction</p>
+        </div>
+    </div>
+    
+    <script>
+        function updateBreakpointInfo() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            document.getElementById('width').textContent = width;
+            document.getElementById('height').textContent = height;
+            
+            let breakpoint = '';
+            if (width >= 1360 && width <= 1380 && height >= 900 && height <= 920) {
+                breakpoint = 'Specific 1368x912 tablet resolution - VERTICAL LAYOUT';
+            } else if (width >= 1200 && height <= 950) {
+                breakpoint = 'Landscape tablets (1200px-1400px, height ≤950px) - VERTICAL LAYOUT';
+            } else if (width >= 1200) {
+                breakpoint = 'Very wide tablets and landscape kiosks (1200px+) - HORIZONTAL LAYOUT';
+            } else if (width >= 1024) {
+                breakpoint = 'Large tablets and kiosk screens (1024px - 1199px) - VERTICAL LAYOUT';
+            } else if (width >= 768) {
+                breakpoint = 'Standard tablets (768px - 1023px) - VERTICAL LAYOUT';
+            } else if (width >= 481) {
+                breakpoint = 'Small tablets and large phones (481px - 767px) - VERTICAL LAYOUT';
+            } else {
+                breakpoint = 'Small phones (up to 480px) - VERTICAL LAYOUT';
+            }
+            
+            document.getElementById('current-breakpoint').textContent = breakpoint;
+        }
+        
+        // Update on load and resize
+        updateBreakpointInfo();
+        window.addEventListener('resize', updateBreakpointInfo);
+    </script>
+</body>
+</html>

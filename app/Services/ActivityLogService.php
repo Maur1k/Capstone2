@@ -102,4 +102,27 @@ class ActivityLogService
             $request
         );
     }
+
+    public static function logRequirementsUpdated(
+        Admin $admin,
+        string $targetType,
+        int $targetId,
+        string $trackingNumber,
+        string $requirements,
+        Request $request = null
+    ): ActivityLog {
+        return self::log(
+            $admin,
+            'requirements_updated',
+            "Updated requirements checklist",
+            $targetType,
+            $targetId,
+            [
+                'tracking_number' => $trackingNumber,
+                'requirements' => $requirements,
+                'department' => $admin->department,
+            ],
+            $request
+        );
+    }
 }

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Officer Login - Click2Serve</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body class="officer-login">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <h1 class="login-title">Officer Login</h1>
+                <p class="login-subtitle">Access your Alaminos City department dashboard</p>
+            </div>
+
+            <form method="POST" action="{{ route('officer.login.attempt') }}" class="login-form">
+                @csrf
+
+                @if ($errors->any() && !$errors->has('email') && !$errors->has('password'))
+                    <div class="form-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>{{ $errors->first() }}</span>
+                    </div>
+                @endif
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus
+                        class="form-input" placeholder="Enter your email address">
+                    @error('email')
+                        <div class="form-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="password-group">
+                        <input id="password" name="password" type="password" required class="form-input"
+                            placeholder="Enter your password">
+                        <button type="button" onclick="togglePassword('password')" class="password-toggle" aria-label="Toggle password visibility">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    @error('password')
+                        <div class="form-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                </div>
+
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Access Dashboard
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>Alaminos City Click2Serve System &copy; {{ date('Y') }}</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const passwordGroup = field.closest('.password-group');
+            const button = passwordGroup ? passwordGroup.querySelector('.password-toggle') : field.nextElementSibling;
+            
+            if (!button) return;
+            
+            const icon = button.querySelector('i');
+            if (!icon) return;
+
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                field.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        // Add loading state to form submission
+        document.querySelector('.login-form').addEventListener('submit', function (e) {
+            const submitBtn = this.querySelector('.login-btn');
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1439 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <title>Wayfinding Kiosk</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --teal-700: #0e90a6;
+      --teal-800: #087a93;
+      --teal-900: #0a6a80;
+      --card-shadow: 0 15px 35px rgba(0, 0, 0, .18);
+      --inner-shadow: inset 0 0 0 2px rgba(255, 255, 255, .25), inset 0 12px 24px rgba(255, 255, 255, .06);
+      --input-border: #e2e8f0;
+      --input-focus: #0e90a6;
+      --text-primary: #1a202c;
+      --text-secondary: #4a5568;
+      --text-muted: #718096;
+      --form-bg: #ffffff;
+      --input-bg: #f8f9fa;
+      --gradient-bg: linear-gradient(180deg, #0e90a6 0%, #087a93 50%, #0a6a80 100%);
+    }
+
+     html, body, #app { 
+       height: 100%; 
+       margin: 0; 
+       overflow: hidden; 
+       font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+       background: var(--gradient-bg);
+       background-image: url('/kiosk/assets/bg.png');
+       background-size: cover;
+       background-position: center;
+       background-repeat: no-repeat;
+       background-attachment: fixed;
+       color: var(--text-primary);
+       position: relative;
+       /* Kiosk optimizations */
+       -webkit-touch-callout: none;
+       -webkit-user-select: none;
+       -khtml-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+       user-select: none;
+       -webkit-tap-highlight-color: transparent;
+       touch-action: manipulation;
+     }
+    
+    /* Background pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.1) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.1) 75%);
+      background-size: 60px 60px;
+      background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+      opacity: 0.3;
+      z-index: -1;
+    }
+    
+    #ui { 
+      position: absolute; 
+      top: 20px; 
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 1160px;
+      max-width: calc(100vw - 40px);
+      box-sizing: border-box;
+      overflow: visible;
+      pointer-events: none;
+      padding: 0 20px;
+    }
+    
+    #ui > * {
+      pointer-events: auto;
+    }
+    
+    /* Header sections matching services.css - Optimized */
+    #ui .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      min-width: auto;
+      justify-content: flex-start;
+      margin-right: 12px;
+    }
+    
+    #ui .header-center {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      padding: 0 10px;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+    
+    #ui .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-shrink: 1;
+      min-width: 0;
+      justify-content: flex-end;
+      margin-left: 12px;
+    }
+    
+    /* Modern capsule-shaped controls - Optimized */
+    .nav-control {
+      display: flex;
+      align-items: center;
+      background: var(--form-bg);
+      border: 2px solid var(--input-border);
+      border-radius: 25px;
+      padding: 0;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--card-shadow);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      flex-shrink: 1;
+      min-width: 200px;
+      max-width: 380px;
+      width: auto;
+      height: 48px;
+      overflow: visible;
+      /* Prevent vibration and ensure stability */
+      transform: translateZ(0);
+      will-change: auto;
+      /* Additional stability fixes */
+      -webkit-transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      -webkit-perspective: 1000;
+      backface-visibility: hidden;
+      perspective: 1000px;
+    }
+    
+    /* Responsive nav-control sizing for center section - Optimized */
+    #ui .header-center .nav-control {
+      min-width: 180px;
+      max-width: 280px;
+      flex: 1 1 auto;
+    }
+    
+    /* First nav-control in center (floor selector) */
+    #ui .header-center .nav-control:first-child {
+      min-width: 200px;
+      max-width: 280px;
+      flex: 1 1 auto;
+    }
+    
+    /* Second nav-control in center (zoom + destination) */
+    #ui .header-center .nav-control:last-child {
+      min-width: 240px;
+      max-width: 340px;
+      flex: 1.2 1 auto;
+    }
+    
+    /* Ensure destination select in zoom-controls has enough space */
+    #ui .header-center .zoom-controls .destination-select {
+      min-width: 180px;
+      flex: 1 1 auto;
+      width: auto;
+    }
+    
+    /* Search control in header-right - Optimized */
+    #ui .header-right .nav-control {
+      min-width: 200px;
+      max-width: 300px;
+      flex: 0 1 auto;
+    }
+    
+    .nav-control:hover {
+      border-color: var(--input-focus);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+      transform: translateZ(0) !important;
+      -webkit-transform: translateZ(0) !important;
+    }
+    
+    /* Zoom controls */
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .zoom-btn {
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border: none;
+      color: var(--teal-700);
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      border-radius: 16px;
+    }
+    
+    .zoom-btn:hover {
+      background: var(--input-bg);
+      transform: scale(1.1);
+      color: var(--teal-800);
+    }
+    
+    .zoom-btn:active {
+      transform: scale(0.95);
+      background: var(--input-border);
+    }
+    
+    /* Destination input */
+    .destination-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      padding: 12px 15px;
+      outline: none;
+      min-width: 150px;
+      font-family: 'Poppins', sans-serif;
+      /* Kiosk touch optimizations */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 0;
+      min-height: 44px; /* Minimum touch target size */
+      overflow: visible;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    
+    .destination-input::placeholder {
+      color: var(--text-muted);
+    }
+    
+    .destination-input:focus {
+      color: var(--text-primary);
+    }
+    
+    .destination-select {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      padding: 12px 15px;
+      padding-right: 40px;
+      outline: none;
+      cursor: pointer;
+      flex: 1;
+      min-width: 0;
+      width: 100%;
+      max-width: none;
+      font-family: 'Poppins', sans-serif;
+      /* Kiosk touch optimizations */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 0;
+      min-height: 44px; /* Minimum touch target size */
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      /* Prevent vibration and ensure stability */
+      transform: translateZ(0);
+      will-change: auto;
+      transition: none;
+      /* Additional stability fixes */
+      -webkit-transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      -webkit-perspective: 1000;
+      backface-visibility: hidden;
+      perspective: 1000px;
+    }
+    
+    /* Ensure placeholder text is fully visible */
+    .destination-select option:first-child {
+      white-space: normal;
+    }
+    
+    .destination-select option {
+      background: var(--form-bg);
+      color: var(--text-primary);
+      padding: 10px;
+    }
+    
+    /* Prevent click vibration on select elements */
+    .destination-select:active,
+    .destination-select:focus {
+      transform: translateZ(0) !important;
+      -webkit-transform: translateZ(0) !important;
+    }
+    
+    /* Prevent touch vibration on mobile/tablet */
+    @media (hover: none) and (pointer: coarse) {
+      .destination-select {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+    }
+    
+    /* Back button container - Optimized */
+    .back-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      height: 48px;
+    }
+
+    /* Back button */
+    .back-button {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: white;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      /* Prevent vibration and ensure stability */
+      transform: translateZ(0);
+      will-change: auto;
+      -webkit-transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      -webkit-perspective: 1000;
+      backface-visibility: hidden;
+      perspective: 1000px;
+    }
+
+    .back-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateX(-2px) translateZ(0) !important;
+      -webkit-transform: translateX(-2px) translateZ(0) !important;
+    }
+    
+    .back-button:active {
+      transform: translateZ(0) scale(0.95) !important;
+      -webkit-transform: translateZ(0) scale(0.95) !important;
+    }
+    
+    /* Prevent click vibration on select elements */
+    .destination-select:active,
+    .destination-select:focus {
+      transform: translateZ(0) !important;
+      -webkit-transform: translateZ(0) !important;
+    }
+    
+    /* Prevent touch vibration on mobile/tablet */
+    @media (hover: none) and (pointer: coarse) {
+      .destination-select {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+    }
+    
+    .back-text {
+      color: white;
+      font-weight: 500;
+      font-size: 16px;
+      cursor: default;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      height: 48px;
+    }
+
+    
+    /* Search control */
+    .search-control {
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: visible;
+    }
+    
+    .search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      padding: 12px 15px;
+      outline: none;
+      min-width: 0;
+      font-family: 'Poppins', sans-serif;
+      /* Kiosk touch optimizations */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 0;
+      min-height: 44px; /* Minimum touch target size */
+      overflow: visible;
+    }
+    
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+    
+    .search-input:focus {
+      color: var(--text-primary);
+      outline: 2px solid var(--input-focus);
+      outline-offset: 2px;
+    }
+    
+    .destination-input:focus,
+    .destination-select:focus {
+      outline: none;
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 3px rgba(14, 144, 166, 0.1);
+      /* Prevent vibration on focus */
+      transform: translateZ(0);
+    }
+    
+    .nav-control:focus-within {
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 3px rgba(14, 144, 166, 0.1), var(--card-shadow);
+      /* Prevent vibration on focus */
+      transform: translateZ(0) !important;
+      -webkit-transform: translateZ(0) !important;
+    }
+    
+    /* Ensure consistent focus styling for all inputs */
+    .destination-input:focus,
+    .destination-select:focus,
+    .search-input:focus {
+      outline: none !important;
+      border: none !important;
+    }
+    
+    .search-icon {
+      color: var(--teal-700);
+      font-size: 18px;
+      margin-right: 20px;
+      pointer-events: none;
+    }
+    
+    /* POI List */
+    #poi-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      max-height: 300px;
+      overflow-y: auto;
+      background: #ffffff;
+      border: 2px solid var(--teal-700);
+      border-radius: 15px;
+      padding: 0;
+      margin-top: 5px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      z-index: 1001;
+      transform: translateZ(0);
+      will-change: auto;
+      display: none;
+    }
+    
+    #poi-list.show {
+      display: block;
+    }
+    
+    .poi-item {
+      padding: 15px 20px;
+      color: var(--text-primary);
+      cursor: pointer;
+      border-radius: 0;
+      margin-bottom: 0;
+      transition: background-color 0.2s ease;
+      border: none;
+      border-bottom: 1px solid #f0f0f0;
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+    
+    .poi-item:hover {
+      background: #f8f9fa;
+    }
+    
+    .poi-item:first-child {
+      padding-top: 20px;
+    }
+    
+    .poi-item:last-child {
+      margin-bottom: 0;
+      border-bottom: none;
+      padding-bottom: 20px;
+    }
+    
+    /* Canvas container */
+    #canvas-container { 
+      width: 100%; 
+      height: calc(100vh - 80px);
+      position: absolute;
+      top: 80px;
+      left: 0;
+      z-index: 1;
+    }
+    
+    /* Scrollbar styling */
+    #poi-list::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    #poi-list::-webkit-scrollbar-track {
+      background: var(--input-bg);
+      border-radius: 4px;
+    }
+    
+    #poi-list::-webkit-scrollbar-thumb {
+      background: var(--teal-700);
+      border-radius: 4px;
+    }
+    
+    #poi-list::-webkit-scrollbar-thumb:hover {
+      background: var(--teal-800);
+    }
+    
+     /* Kiosk/Tablet Responsive Design */
+     
+     /* Responsive styles for iPad Air 1180x820 - Optimized (Primary Focus) */
+     @media (width: 1180px) and (height: 820px) {
+       #ui {
+         width: 1160px !important;
+         padding: 0 28px !important;
+         gap: 20px !important;
+         align-items: center !important;
+         top: 20px !important;
+       }
+       
+       #ui .header-left {
+         flex-shrink: 0 !important;
+         min-width: auto !important;
+         gap: 12px !important;
+         margin-right: 12px !important;
+       }
+       
+       #ui .header-center {
+         flex: 1 !important;
+         justify-content: center !important;
+         align-items: center !important;
+         gap: 12px !important;
+         min-width: 0 !important;
+         padding: 0 10px !important;
+         flex-wrap: nowrap !important;
+       }
+       
+       #ui .header-right {
+         flex-shrink: 1 !important;
+         min-width: 0 !important;
+         gap: 0 !important;
+         margin-left: 12px !important;
+       }
+       
+       #ui .header-center .nav-control:first-child {
+         min-width: 180px !important;
+         max-width: 280px !important;
+         height: 48px !important;
+         flex: 1 1 auto !important;
+       }
+       
+       #ui .header-center .nav-control:last-child {
+         min-width: 220px !important;
+         max-width: 340px !important;
+         height: 48px !important;
+         flex: 1.2 1 auto !important;
+       }
+       
+       #ui .header-center .zoom-controls .destination-select {
+         min-width: 0 !important;
+         font-size: 14px !important;
+       }
+       
+       #ui .header-right .nav-control {
+         min-width: 180px !important;
+         max-width: 300px !important;
+         height: 48px !important;
+         flex: 0 1 auto !important;
+       }
+       
+       .back-container {
+         height: 48px !important;
+       }
+       
+       .back-button {
+         width: 48px !important;
+         height: 48px !important;
+       }
+       
+       .nav-control {
+         height: 48px !important;
+       }
+     }
+     
+     /* iPad Pro and other iPad sizes (1024px - 1366px width) */
+     @media (min-width: 1024px) and (max-width: 1366px) and (min-height: 768px) and (max-height: 1024px) {
+       #ui {
+         width: calc(100vw - 40px) !important;
+         max-width: 1160px !important;
+         padding: 0 24px !important;
+         gap: 18px !important;
+         align-items: center !important;
+       }
+       
+       #ui .header-left {
+         gap: 12px !important;
+         margin-right: 12px !important;
+       }
+       
+       #ui .header-center {
+         gap: 12px !important;
+         padding: 0 8px !important;
+         flex-wrap: nowrap !important;
+       }
+       
+       #ui .header-right {
+         gap: 0 !important;
+         margin-left: 12px !important;
+         flex-shrink: 1 !important;
+         min-width: 0 !important;
+       }
+       
+       .nav-control {
+         height: 48px !important;
+       }
+       
+       .back-button {
+         width: 48px !important;
+         height: 48px !important;
+       }
+     }
+     
+     /* Tablet resolution range (1024px - 1200px) - Optimized for iPad */
+     @media (min-width: 1024px) and (max-width: 1200px) and (min-height: 600px) {
+       #ui {
+         width: calc(100vw - 40px) !important;
+         max-width: 1160px !important;
+         padding: 0 20px !important;
+         gap: 15px !important;
+         align-items: center !important;
+       }
+       
+       #ui .header-left {
+         gap: 12px !important;
+         margin-right: 12px !important;
+       }
+       
+       #ui .header-center {
+         gap: 10px !important;
+         padding: 0 8px !important;
+         flex-wrap: nowrap !important;
+       }
+       
+       #ui .header-center .nav-control:first-child {
+         min-width: 160px !important;
+         max-width: 260px !important;
+         height: 48px !important;
+         flex: 1 1 auto !important;
+       }
+       
+       #ui .header-center .nav-control:last-child {
+         min-width: 200px !important;
+         max-width: 320px !important;
+         height: 48px !important;
+         flex: 1.2 1 auto !important;
+       }
+       
+       #ui .header-center .zoom-controls .destination-select {
+         min-width: 0 !important;
+         font-size: 14px !important;
+       }
+       
+       #ui .header-right {
+         gap: 0 !important;
+         margin-left: 12px !important;
+         flex-shrink: 1 !important;
+         min-width: 0 !important;
+       }
+       
+       #ui .header-right .nav-control {
+         min-width: 160px !important;
+         max-width: 280px !important;
+         height: 48px !important;
+         flex: 0 1 auto !important;
+       }
+       
+       .nav-control {
+         height: 48px !important;
+       }
+       
+       .back-button {
+         width: 48px !important;
+         height: 48px !important;
+       }
+     }
+     
+     /* iPad Portrait Orientation */
+     @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+       #ui {
+         width: calc(100vw - 30px) !important;
+         padding: 0 15px !important;
+         gap: 12px !important;
+       }
+       
+       #ui .header-left {
+         margin-right: 12px !important;
+       }
+       
+       #ui .header-center {
+         gap: 8px !important;
+         padding: 0 5px !important;
+         flex-wrap: nowrap !important;
+       }
+       
+       #ui .header-right {
+         margin-left: 12px !important;
+         flex-shrink: 1 !important;
+         min-width: 0 !important;
+       }
+       
+       #ui .header-center .nav-control:first-child {
+         min-width: 140px !important;
+         max-width: 240px !important;
+         flex: 1 1 auto !important;
+       }
+       
+       #ui .header-center .nav-control:last-child {
+         min-width: 180px !important;
+         max-width: 300px !important;
+         flex: 1.2 1 auto !important;
+       }
+       
+       #ui .header-right .nav-control {
+         min-width: 140px !important;
+         max-width: 260px !important;
+         flex: 0 1 auto !important;
+       }
+     }
+     
+     /* iPad Landscape Orientation */
+     @media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+       #ui {
+         width: calc(100vw - 40px) !important;
+         max-width: 1160px !important;
+         padding: 0 24px !important;
+         gap: 18px !important;
+       }
+       
+       #ui .header-left {
+         margin-right: 12px !important;
+       }
+       
+       #ui .header-center {
+         gap: 12px !important;
+         padding: 0 8px !important;
+         flex-wrap: nowrap !important;
+       }
+       
+       #ui .header-right {
+         margin-left: 12px !important;
+         flex-shrink: 1 !important;
+         min-width: 0 !important;
+       }
+     }
+     
+     /* CRITICAL FIX: Force navigation to fit on 1368x912 tablets */
+     @media (min-width: 1360px) and (max-width: 1400px) {
+       #ui {
+         max-width: calc(100vw - 60px) !important;
+         gap: 8px !important;
+       }
+       
+       .back-container {
+         gap: 10px !important;
+       }
+       
+       .back-button {
+         width: 40px !important;
+         height: 40px !important;
+       }
+       
+       .back-button svg {
+         width: 20px !important;
+         height: 20px !important;
+       }
+       
+       .back-text {
+         font-size: 14px !important;
+       }
+       
+       
+       .nav-control {
+         flex-shrink: 1 !important;
+         min-width: 200px !important;
+         max-width: 320px !important;
+         width: auto !important;
+       }
+       
+       .destination-input,
+       .destination-select,
+       .search-input {
+         font-size: 14px !important;
+         padding: 12px 15px !important;
+         min-width: 160px !important;
+       }
+       
+       .zoom-btn {
+         width: 30px !important;
+         height: 30px !important;
+         font-size: 14px !important;
+       }
+     }
+     
+     /* Large tablets and kiosk screens (1024px and up) */
+     @media (min-width: 1024px) {
+       #ui {
+         top: 30px;
+         gap: 10px !important;
+         max-width: calc(100vw - 60px) !important;
+       }
+       
+       .back-container {
+         gap: 11px !important;
+       }
+       
+       .back-button {
+         width: 44px !important;
+         height: 44px !important;
+       }
+       
+       .back-button svg {
+         width: 22px !important;
+         height: 22px !important;
+       }
+       
+       .back-text {
+         font-size: 15px !important;
+       }
+       
+       .nav-control {
+         padding: 6px !important;
+         border-radius: 25px !important;
+         flex-shrink: 1 !important;
+         min-width: 200px !important;
+         max-width: 340px !important;
+         width: auto !important;
+       }
+       
+       .zoom-btn {
+         width: 35px !important;
+         height: 35px !important;
+         font-size: 16px !important;
+       }
+       
+       .destination-input,
+       .destination-select,
+       .search-input {
+         font-size: 14px !important;
+         padding: 12px 15px !important;
+         min-width: 160px !important;
+       }
+       
+       .poi-item {
+         padding: 16px 20px;
+         font-size: 16px;
+       }
+     }
+     
+     /* Responsive Design - Ensure header alignment at tablet resolution */
+     @media (min-width: 1024px) and (max-width: 1200px) {
+       #ui {
+         display: flex !important;
+         align-items: center !important;
+         justify-content: space-between !important;
+         gap: 20px !important;
+         width: 100% !important;
+       }
+       
+       #ui .header-left {
+         flex-shrink: 0 !important;
+         min-width: 48px !important;
+         display: flex !important;
+         align-items: center !important;
+       }
+       
+       #ui .header-right {
+         flex-shrink: 1 !important;
+         min-width: 0 !important;
+         display: flex !important;
+         align-items: center !important;
+       }
+       
+       #ui .header-center {
+         flex: 1 !important;
+         display: flex !important;
+         justify-content: center !important;
+         align-items: center !important;
+         text-align: center !important;
+         min-width: 0 !important;
+         flex-wrap: nowrap !important;
+       }
+       
+       .back-button {
+         width: 48px !important;
+         height: 48px !important;
+         flex-shrink: 0 !important;
+       }
+     }
+     
+     /* Standard tablets (768px to 1023px) */
+     @media (min-width: 768px) and (max-width: 1023px) {
+       #ui {
+         top: 25px;
+         gap: 12px;
+         max-width: calc(100vw - 50px);
+       }
+       
+       .nav-control {
+         padding: 6px;
+         border-radius: 28px;
+         min-height: 60px;
+         flex-shrink: 1;
+         min-width: 0;
+       }
+       
+       .zoom-btn {
+         width: 45px;
+         height: 45px;
+         font-size: 22px;
+       }
+       
+       .destination-input,
+       .destination-select,
+       .search-input {
+         font-size: 15px;
+         padding: 14px 18px;
+         min-width: 0;
+       }
+       
+       .poi-item {
+         padding: 14px 18px;
+         font-size: 15px;
+       }
+       
+       #poi-list {
+         max-height: 400px;
+       }
+     }
+     
+     /* Small tablets and large phones (481px to 767px) */
+     @media (min-width: 481px) and (max-width: 767px) {
+       #ui {
+         top: 15px;
+         left: 15px;
+         right: 15px;
+         transform: none;
+         flex-direction: column;
+         align-items: stretch;
+         gap: 12px;
+       }
+       
+       .nav-control {
+         padding: 8px;
+         border-radius: 25px;
+         min-height: 55px;
+       }
+       
+       .zoom-btn {
+         width: 50px;
+         height: 50px;
+         font-size: 24px;
+       }
+       
+       .destination-input,
+       .destination-select,
+       .search-input {
+         font-size: 16px;
+         padding: 15px 20px;
+         min-width: 100%;
+       }
+       
+       .poi-item {
+         padding: 12px 15px;
+         font-size: 14px;
+       }
+       
+       #poi-list {
+         max-height: 350px;
+       }
+     }
+     
+     /* Small phones (up to 480px) */
+     @media (max-width: 480px) {
+       #ui {
+         top: 10px;
+         left: 10px;
+         right: 10px;
+         transform: none;
+         flex-direction: column;
+         align-items: stretch;
+         gap: 10px;
+       }
+       
+       .nav-control {
+         padding: 6px;
+         border-radius: 20px;
+         min-height: 50px;
+       }
+       
+       .zoom-btn {
+         width: 45px;
+         height: 45px;
+         font-size: 20px;
+       }
+       
+       .destination-input,
+       .destination-select,
+       .search-input {
+         font-size: 14px;
+         padding: 12px 16px;
+         min-width: 100%;
+       }
+       
+       .poi-item {
+         padding: 10px 12px;
+         font-size: 13px;
+       }
+       
+       #poi-list {
+         max-height: 300px;
+       }
+     }
+     
+     /* Enhanced Touch-Friendly Improvements */
+     
+     /* Base touch optimizations for all devices */
+     .nav-control,
+     .zoom-btn,
+     .poi-item,
+     .destination-input,
+     .destination-select,
+     .search-input {
+       /* Ensure minimum touch target size */
+       min-height: 44px;
+       min-width: 44px;
+       /* Improve touch responsiveness */
+       -webkit-tap-highlight-color: rgba(14, 144, 166, 0.2);
+       -webkit-touch-callout: none;
+       -webkit-user-select: none;
+       -khtml-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+       user-select: none;
+       /* Smooth transitions for touch feedback */
+       transition: all 0.15s ease;
+     }
+     
+     /* Enhanced touch targets for kiosk/tablet devices */
+     @media (hover: none) and (pointer: coarse) {
+       .nav-control {
+         min-height: 64px;
+         padding: 12px;
+         border-radius: 32px;
+         /* Larger touch area */
+         margin: 4px;
+       }
+         
+         /* Override for iPad - maintain 48px height */
+         @media (min-width: 1024px) and (max-width: 1366px) {
+           .nav-control {
+             height: 48px !important;
+             min-height: 48px !important;
+             padding: 0 !important;
+             margin: 0 !important;
+           }
+         }
+       
+       .zoom-btn {
+         min-width: 64px;
+         min-height: 64px;
+         font-size: 28px;
+         font-weight: 600;
+         /* Enhanced touch feedback */
+         -webkit-tap-highlight-color: rgba(14, 144, 166, 0.3);
+         border-radius: 32px;
+       }
+       
+       .destination-input,
+       .destination-select,
+       .search-input {
+         min-height: 56px;
+         font-size: 18px;
+         padding: 18px 24px;
+         /* Better touch interaction */
+         -webkit-tap-highlight-color: rgba(14, 144, 166, 0.1);
+         border-radius: 28px;
+       }
+       
+       /* Override for iPad - maintain standard sizing */
+       @media (min-width: 1024px) and (max-width: 1366px) {
+         .destination-input,
+         .destination-select,
+         .search-input {
+           min-height: 44px !important;
+           font-size: 14px !important;
+           padding: 12px 15px !important;
+           padding-right: 40px !important;
+         }
+       }
+       
+       .poi-item {
+         min-height: 56px;
+         padding: 18px 20px;
+         font-size: 17px;
+         display: flex;
+         align-items: center;
+         /* Enhanced touch area */
+         margin: 2px 0;
+         border-radius: 12px;
+         /* Better touch feedback */
+         -webkit-tap-highlight-color: rgba(14, 144, 166, 0.2);
+       }
+       
+       /* Remove hover effects on touch devices */
+       .nav-control:hover {
+         transform: none;
+         box-shadow: var(--card-shadow);
+         border-color: var(--input-border);
+       }
+       
+       .zoom-btn:hover {
+         transform: none;
+         background: transparent;
+         color: var(--teal-700);
+       }
+       
+       .poi-item:hover {
+         transform: none;
+         box-shadow: none;
+         background: transparent;
+         border-color: transparent;
+       }
+       
+       /* Enhanced active states for better touch feedback */
+       .nav-control:active {
+         transform: scale(0.96);
+         background: var(--input-bg);
+         border-color: var(--input-focus);
+         box-shadow: 0 4px 12px rgba(14, 144, 166, 0.2);
+       }
+       
+       .zoom-btn:active {
+         transform: scale(0.92);
+         background: var(--input-border);
+         color: var(--teal-800);
+         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+       }
+       
+       .poi-item:active {
+         transform: scale(0.96);
+         background: var(--input-bg);
+         border-color: var(--input-focus);
+         box-shadow: 0 2px 8px rgba(14, 144, 166, 0.15);
+       }
+       
+       /* Focus states for touch devices */
+       .destination-input:focus,
+       .destination-select:focus,
+       .search-input:focus {
+         background: var(--form-bg);
+         border-color: var(--input-focus);
+         box-shadow: 0 0 0 3px rgba(14, 144, 166, 0.15);
+         transform: scale(1.02);
+       }
+       
+       /* Enhanced dropdown for touch */
+       .search-icon {
+         font-size: 20px;
+         padding: 8px;
+         min-width: 36px;
+         min-height: 36px;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         border-radius: 18px;
+         -webkit-tap-highlight-color: rgba(14, 144, 166, 0.2);
+       }
+     }
+     
+     /* Additional touch optimizations for very large screens (kiosks) - Exclude iPad */
+     @media (min-width: 1200px) and (max-width: 1366px) and (hover: none) and (pointer: coarse) {
+       /* Exclude iPad sizes - they have their own styles */
+     }
+     
+     @media (min-width: 1367px) and (hover: none) and (pointer: coarse) {
+       .nav-control {
+         min-height: 72px;
+         padding: 16px;
+         border-radius: 36px;
+       }
+       
+       .zoom-btn {
+         min-width: 72px;
+         min-height: 72px;
+         font-size: 32px;
+         border-radius: 36px;
+       }
+       
+       .destination-input,
+       .destination-select,
+       .search-input {
+         min-height: 64px;
+         font-size: 20px;
+         padding: 20px 28px;
+         border-radius: 32px;
+       }
+       
+       .poi-item {
+         min-height: 64px;
+         padding: 20px 24px;
+         font-size: 18px;
+         border-radius: 16px;
+       }
+     }
+     
+     /* High DPI displays (retina, 4K) */
+     @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+       .nav-control {
+         border-width: 1px;
+       }
+       
+       .zoom-btn {
+         font-weight: 600;
+       }
+     }
+     
+     /* Landscape orientation for tablets - iPad optimized */
+     @media (min-width: 768px) and (orientation: landscape) {
+       #ui {
+         flex-direction: row;
+         flex-wrap: nowrap;
+         justify-content: center;
+       }
+       
+       .nav-control {
+         flex-shrink: 0;
+       }
+       
+       /* Ensure iPad maintains proper sizing in landscape */
+       @media (min-width: 1024px) and (max-width: 1366px) {
+         .nav-control {
+           height: 48px !important;
+           min-height: 48px !important;
+         }
+         
+         .back-button {
+           width: 48px !important;
+           height: 48px !important;
+         }
+       }
+     }
+     
+     /* Enhanced touch scrolling */
+     #poi-list {
+       /* Smooth scrolling for touch devices */
+       -webkit-overflow-scrolling: touch;
+       scroll-behavior: smooth;
+       /* Better momentum scrolling */
+       overscroll-behavior: contain;
+     }
+     
+     /* Touch gesture improvements */
+     body {
+       /* Prevent pull-to-refresh on mobile */
+       overscroll-behavior-y: contain;
+       /* Better touch scrolling */
+       -webkit-overflow-scrolling: touch;
+     }
+     
+     /* Enhanced focus indicators for touch */
+     .destination-input:focus,
+     .destination-select:focus,
+     .search-input:focus {
+       /* Larger focus ring for touch devices */
+       outline: 3px solid var(--input-focus);
+       outline-offset: 2px;
+       /* Visual feedback */
+       box-shadow: 0 0 0 6px rgba(14, 144, 166, 0.1);
+     }
+     
+     /* Touch-friendly dropdown styling */
+     .destination-select {
+       /* Custom dropdown arrow for better touch */
+       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230e90a6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+       background-repeat: no-repeat;
+       background-position: right 12px center;
+       background-size: 16px;
+       padding-right: 40px;
+     }
+     
+     /* Improved touch targets for small elements */
+     .search-icon {
+       /* Make clickable area larger than visual */
+       position: relative;
+     }
+     
+     .search-icon::before {
+       content: '';
+       position: absolute;
+       top: -8px;
+       left: -8px;
+       right: -8px;
+       bottom: -8px;
+       /* Invisible but clickable area */
+       background: transparent;
+     }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="ui">
+      <!-- Header Left: Back Button -->
+      <div class="header-left">
+      <div class="back-container">
+        <button class="back-button" onclick="goBack()" title="Back to Map">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+          </svg>
+        </button>
+        <span class="back-text">Map</span>
+      </div>
+      </div>
+
+      <!-- Header Center: Floor Selection and Navigation Controls -->
+      <div class="header-center">
+      <!-- Floor Selection Control -->
+      <div class="nav-control">
+        <select id="floor-select" class="destination-select">
+          <option value="">Loading floors...</option>
+        </select>
+      </div>
+      
+      <!-- Navigation Control with Zoom and Destination -->
+      <div class="nav-control zoom-controls">
+        <button class="zoom-btn" id="zoom-in" title="Zoom In">+</button>
+        <button class="zoom-btn" id="zoom-out" title="Zoom Out">−</button>
+        <select id="location-select" class="destination-select">
+          <option value="">Input Destination</option>
+        </select>
+        </div>
+      </div>
+      
+      <!-- Header Right: Search Control -->
+      <div class="header-right">
+      <div class="nav-control search-control">
+          <input id="search" class="search-input" placeholder="Search POIs..." autocomplete="off" />
+        
+        <!-- POI List -->
+        <div id="poi-list"></div>
+        </div>
+      </div>
+    </div>
+    <div id="canvas-container"></div>
+  </div>
+
+  <!-- Removed duplicate global build to avoid multiple Three.js instances; using module build via import map below -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.149.0/build/three.module.js"
+    }
+  }
+  </script>
+  <script type="module">
+    import * as THREE_MOD from 'three';
+    import { GLTFLoader } from 'https://unpkg.com/three@0.149.0/examples/jsm/loaders/GLTFLoader.js';
+    import { DRACOLoader } from 'https://unpkg.com/three@0.149.0/examples/jsm/loaders/DRACOLoader.js';
+    import { OrbitControls } from 'https://unpkg.com/three@0.149.0/examples/jsm/controls/OrbitControls.js';
+    window.THREE = window.THREE || THREE_MOD; // expose module build for loaders
+    window.GLTFLoader = GLTFLoader;
+    window.DRACOLoader = DRACOLoader;
+    window.OrbitControls = OrbitControls;
+  </script>
+  <script>
+    // Kiosk GLB debug/override flags
+    // window.KIOSK_GLB_PATH = '/kiosk/assets/map.glb'; // Commented out to allow floor-specific GLB files
+    window.KIOSK_FORCE_GLB = true;
+    window.KIOSK_SHOW_BBOX = false;
+    window.KIOSK_GLB_SCALE = 1.0; // adjust if model is too big/small
+    window.KIOSK_TARGET_WIDTH = 2000;  // auto-scale model to ~2000 units wide
+    window.KIOSK_TARGET_HEIGHT = 2000; // and ~2000 units tall
+    
+    // Back button functionality
+    function goBack() {
+      // Add your back navigation logic here
+      // For example: window.history.back() or navigate to a specific page
+      window.history.back();
+    }
+  </script>
+  <script src="/kiosk/main.js"></script>
+</body>
+</html>

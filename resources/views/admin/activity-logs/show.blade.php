@@ -1,149 +1,141 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activity Log Details - Admin Dashboard</title>
-    <link rel="stylesheet" href="/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/activity-logs-admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/super-admin.css') }}">
 </head>
 
-<body style="background:#f3f4f6; min-height:100vh;">
-    <div style="max-width:1200px; margin:24px auto;">
-        <!-- Header -->
-        <div
-            style="background:#fff; border-radius:10px; padding:16px; box-shadow:0 8px 20px rgba(0,0,0,.06); margin-bottom:24px;">
-            <div style="display:flex; align-items:center; justify-content:space-between;">
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
                 <div>
-                    <h2 style="margin:0;">Activity Log Details</h2>
-                    <p style="margin:4px 0 0 0; color:#6b7280;">Detailed information about this activity</p>
+                    <h1 class="header-title">Activity Log Details</h1>
+                    <p class="header-subtitle">Detailed information about this activity</p>
                 </div>
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <a href="{{ route('admin.activity-logs.index') }}"
-                        style="background:#6b7280; color:#fff; text-decoration:none; padding:8px 12px; border-radius:6px;">←
-                        Back to Logs</a>
-                    <form method="POST" action="{{ route('admin.logout') }}" style="display:inline;">
-                        @csrf
-                        <button type="submit"
-                            style="background:#ef4444; color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">Logout</button>
-                    </form>
-                </div>
+                <a href="{{ route('admin.activity-logs.index') }}" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Logs
+                </a>
             </div>
         </div>
 
-        <!-- Activity Details -->
-        <div
-            style="background:#fff; border-radius:10px; padding:24px; box-shadow:0 8px 20px rgba(0,0,0,.06); margin-bottom:24px;">
-            <div style="display:flex; align-items:center; gap:16px; margin-bottom:24px;">
-                <div style="font-size:48px;">{{ $activityLog->activity_icon }}</div>
-                <div>
-                    <h3 style="margin:0; font-size:24px;">
-                        {{ ucfirst(str_replace('_', ' ', $activityLog->activity_type)) }}</h3>
-                    <p style="margin:4px 0 0 0; color:#6b7280; font-size:16px;">{{ $activityLog->description }}</p>
+        <div class="card">
+            <div class="activity-header">
+                <div class="activity-icon">
+                    <i
+                        class="fas fa-{{ $activityLog->activity_type === 'login' ? 'sign-in-alt' : ($activityLog->activity_type === 'logout' ? 'sign-out-alt' : ($activityLog->activity_type === 'status_change' ? 'exchange-alt' : ($activityLog->activity_type === 'request_viewed' ? 'eye' : ($activityLog->activity_type === 'request_created' ? 'plus' : ($activityLog->activity_type === 'request_updated' ? 'edit' : 'circle'))))) }}"></i>
+                </div>
+                <div class="activity-info">
+                    <h3 class="activity-title">
+                        {{ ucfirst(str_replace('_', ' ', $activityLog->activity_type)) }}
+                    </h3>
+                    <p class="activity-description">{{ $activityLog->description }}</p>
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px;">
-                <!-- Officer Information -->
-                <div>
-                    <h4 style="margin:0 0 12px 0; color:#374151; border-bottom:2px solid #e5e7eb; padding-bottom:8px;">
-                        Officer Information</h4>
-                    <div style="space-y:12px;">
-                        <div>
-                            <label style="font-weight:600; color:#374151;">Name:</label>
-                            <p style="margin:4px 0;">{{ $activityLog->admin->name }}</p>
-                        </div>
-                        <div>
-                            <label style="font-weight:600; color:#374151;">Email:</label>
-                            <p style="margin:4px 0;">{{ $activityLog->admin->email }}</p>
-                        </div>
-                        <div>
-                            <label style="font-weight:600; color:#374151;">Department:</label>
-                            <p style="margin:4px 0;">{{ $activityLog->admin->department ?? 'N/A' }}</p>
-                        </div>
-                        <div>
-                            <label style="font-weight:600; color:#374151;">Role:</label>
-                            <p style="margin:4px 0;">{{ ucfirst(str_replace('_', ' ', $activityLog->admin->role)) }}</p>
-                        </div>
+            <div class="info-grid">
+                <div class="info-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-user"></i>
+                        Officer Information
+                    </h4>
+                    <div class="info-item">
+                        <label class="info-label">Name</label>
+                        <p class="info-value">{{ $activityLog->admin->name }}</p>
+                    </div>
+                    <div class="info-item">
+                        <label class="info-label">Email</label>
+                        <p class="info-value">{{ $activityLog->admin->email }}</p>
+                    </div>
+                    <div class="info-item">
+                        <label class="info-label">Department</label>
+                        <p class="info-value">{{ $activityLog->admin->department ?? 'N/A' }}</p>
+                    </div>
+                    <div class="info-item">
+                        <label class="info-label">Role</label>
+                        <p class="info-value">{{ ucfirst(str_replace('_', ' ', $activityLog->admin->role)) }}</p>
                     </div>
                 </div>
 
-                <!-- Activity Information -->
-                <div>
-                    <h4 style="margin:0 0 12px 0; color:#374151; border-bottom:2px solid #e5e7eb; padding-bottom:8px;">
-                        Activity Information</h4>
-                    <div style="space-y:12px;">
-                        <div>
-                            <label style="font-weight:600; color:#374151;">Activity Type:</label>
-                            <p style="margin:4px 0;">{{ ucfirst(str_replace('_', ' ', $activityLog->activity_type)) }}
+                <div class="info-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Activity Information
+                    </h4>
+                    <div class="info-item">
+                        <label class="info-label">Activity Type</label>
+                        <p class="info-value">{{ ucfirst(str_replace('_', ' ', $activityLog->activity_type)) }}</p>
+                    </div>
+                    <div class="info-item">
+                        <label class="info-label">Description</label>
+                        <p class="info-value">{{ $activityLog->description }}</p>
+                    </div>
+                    <div class="info-item">
+                        <label class="info-label">Timestamp</label>
+                        <p class="info-value">{{ $activityLog->created_at->format('M d, Y H:i:s') }}</p>
+                    </div>
+                    <div class="info-item">
+                        <label class="info-label">Time Ago</label>
+                        <p class="info-value">{{ $activityLog->formatted_time }}</p>
+                    </div>
+                </div>
+
+                @if($activityLog->target_type && $activityLog->target_id)
+                    <div class="info-section">
+                        <h4 class="section-title">
+                            <i class="fas fa-bullseye"></i>
+                            Target Information
+                        </h4>
+                        <div class="info-item">
+                            <label class="info-label">Target Type</label>
+                            <p class="info-value">
+                                <span class="code-block">{{ $activityLog->target_type }}</span>
                             </p>
                         </div>
-                        <div>
-                            <label style="font-weight:600; color:#374151;">Description:</label>
-                            <p style="margin:4px 0;">{{ $activityLog->description }}</p>
-                        </div>
-                        <div>
-                            <label style="font-weight:600; color:#374151;">Timestamp:</label>
-                            <p style="margin:4px 0;">{{ $activityLog->created_at->format('M d, Y H:i:s') }}</p>
-                        </div>
-                        <div>
-                            <label style="font-weight:600; color:#374151;">Time Ago:</label>
-                            <p style="margin:4px 0;">{{ $activityLog->formatted_time }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Target Information -->
-                @if($activityLog->target_type && $activityLog->target_id)
-                    <div>
-                        <h4 style="margin:0 0 12px 0; color:#374151; border-bottom:2px solid #e5e7eb; padding-bottom:8px;">
-                            Target Information</h4>
-                        <div style="space-y:12px;">
-                            <div>
-                                <label style="font-weight:600; color:#374151;">Target Type:</label>
-                                <p
-                                    style="margin:4px 0; font-family:monospace; background:#f3f4f6; padding:4px 8px; border-radius:4px; display:inline-block;">
-                                    {{ $activityLog->target_type }}</p>
-                            </div>
-                            <div>
-                                <label style="font-weight:600; color:#374151;">Target ID:</label>
-                                <p
-                                    style="margin:4px 0; font-family:monospace; background:#f3f4f6; padding:4px 8px; border-radius:4px; display:inline-block;">
-                                    {{ $activityLog->target_id }}</p>
-                            </div>
+                        <div class="info-item">
+                            <label class="info-label">Target ID</label>
+                            <p class="info-value">
+                                <span class="code-block">{{ $activityLog->target_id }}</span>
+                            </p>
                         </div>
                     </div>
                 @endif
 
-                <!-- Technical Information -->
-                <div>
-                    <h4 style="margin:0 0 12px 0; color:#374151; border-bottom:2px solid #e5e7eb; padding-bottom:8px;">
-                        Technical Information</h4>
-                    <div style="space-y:12px;">
-                        <div>
-                            <label style="font-weight:600; color:#374151;">IP Address:</label>
-                            <p
-                                style="margin:4px 0; font-family:monospace; background:#f3f4f6; padding:4px 8px; border-radius:4px; display:inline-block;">
-                                {{ $activityLog->ip_address ?? 'N/A' }}</p>
-                        </div>
-                        <div>
-                            <label style="font-weight:600; color:#374151;">User Agent:</label>
-                            <p
-                                style="margin:4px 0; font-size:12px; background:#f3f4f6; padding:8px; border-radius:4px; word-break:break-all;">
-                                {{ $activityLog->user_agent ?? 'N/A' }}</p>
-                        </div>
+                <div class="info-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-cog"></i>
+                        Technical Information
+                    </h4>
+                    <div class="info-item">
+                        <label class="info-label">IP Address</label>
+                        <p class="info-value">
+                            <span class="code-block">{{ $activityLog->ip_address ?? 'N/A' }}</span>
+                        </p>
+                    </div>
+                    <div class="info-item">
+                        <label class="info-label">User Agent</label>
+                        <p class="info-value">
+                            <span class="code-block code-block-full">{{ $activityLog->user_agent ?? 'N/A' }}</span>
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Metadata -->
             @if($activityLog->metadata)
-                <div style="margin-top:24px;">
-                    <h4 style="margin:0 0 12px 0; color:#374151; border-bottom:2px solid #e5e7eb; padding-bottom:8px;">
-                        Additional Data</h4>
-                    <div style="background:#f9fafb; padding:16px; border-radius:8px;">
-                        <pre
-                            style="margin:0; font-size:14px; color:#374151; white-space:pre-wrap;">{{ json_encode($activityLog->metadata, JSON_PRETTY_PRINT) }}</pre>
+                <div class="metadata-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-database"></i>
+                        Additional Data
+                    </h4>
+                    <div class="metadata-block">
+                        <pre class="metadata-pre">{{ json_encode($activityLog->metadata, JSON_PRETTY_PRINT) }}</pre>
                     </div>
                 </div>
             @endif

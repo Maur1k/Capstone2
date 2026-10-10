@@ -98,7 +98,15 @@ A comprehensive digital kiosk system for municipal services including civil regi
 ## 🔧 Configuration
 
 ### Print Service
-Configure printer settings in `print-service/server.js`
+Configure printer settings in `print-service/server.js`. Use `.env` `PRINT_FONT_FAMILY` to set the thermal receipt font (defaults to Roboto).
+
+### Feature Toggles
+Super admins can enable/disable experimental experiences from `Admin → Feature Toggles`. Each switch maps to a key inside the `settings` table (`feature.*`) and is respected across the kiosk tracker, receipt printing, manual uploads, and upcoming public dashboards.
+
+### Public Dashboard
+- URL: `/public-dashboard`
+- Displays live request counts, PSA progress milestones, and the latest supporting-document uploads.
+- Controlled via the `feature.public_dashboard` toggle. Disable it if the city prefers to keep operations private.
 
 ### Chatbot Service
 Configure AI settings in `chatbot-service/.env`
@@ -119,6 +127,34 @@ Update municipal information in Admin Panel > Settings
 - **Database**: MySQL
 - **Print Service**: Node.js
 - **Chatbot**: Node.js with AI integration
+
+## 🔌 Companion Services & Environment
+
+| Service | Location | Purpose | Key .env switches |
+| --- | --- | --- | --- |
+| Print Service | `print-service/server.js` | Receives payloads from `RequestController`/kiosk and forwards them to the configured thermal printer (default URL `http://localhost:4000`). | `PRINT_SERVICE_URL` (if you add one), ensure the service runs with `npm start`. |
+| Chatbot Service | `chatbot-service/` | Bridges kiosk chat UI to Dialogflow/AI responses via `ChatbotController`. | `CHATBOT_SERVICE_URL`, `CHATBOT_SERVICE_TIMEOUT`, `CHATBOT_SERVICE_ENABLED`. |
+| SMS Service | `sms-service/send_sms.cjs` (Node) plus optional Python helper | Sends status-change SMS via Semaphore; consumed by `NotificationService`/`NodeSmsService`. | `SEMAPHORE_API_KEY`, `SEMAPHORE_SENDER_NAME`, `SEMAPHORE_ENABLED`, `SEMAPHORE_TEST_NUMBER`, `SEMAPHORE_USE_TEST_NUMBER`, `SMS_SERVICE_URL`, `SMS_SERVICE_ENABLED`, `SMS_SERVICE_TIMEOUT`, `PYTHON_SMS_ENABLED`. |
+
+### Sample .env snippet
+```env
+CHATBOT_SERVICE_URL=http://localhost:5000
+CHATBOT_SERVICE_TIMEOUT=30
+CHATBOT_SERVICE_ENABLED=true
+
+SEMAPHORE_API_KEY=your_api_key
+SEMAPHORE_SENDER_NAME=Click2Serve
+SEMAPHORE_ENABLED=true
+SEMAPHORE_TEST_NUMBER=639219580125
+SEMAPHORE_USE_TEST_NUMBER=true
+SMS_SERVICE_URL=http://localhost:3001
+SMS_SERVICE_ENABLED=true
+SMS_SERVICE_TIMEOUT=30
+
+PYTHON_SMS_ENABLED=false
+```
+
+> When deploying, provision these services alongside the Laravel app and update the `.env` file accordingly so health checks, kiosk printing, and officer notifications continue to work.
 
 ## 📄 License
 

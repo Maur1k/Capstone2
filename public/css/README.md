@@ -56,6 +56,16 @@ This directory contains all stylesheets for the Click2Serve application, organiz
 - **Used by**: Chatbot modal and interface
 - **Features**: Chat bubbles, modal styling
 
+#### **municipal-information.css**
+- **Purpose**: Municipal information page styling
+- **Used by**: Municipal information page with city officials and tourist spots
+- **Features**: 
+  - Tabbed interface for officials and tourist spots
+  - Responsive design optimized for kiosk/tablet use
+  - Touch-friendly interactions and scrolling
+  - Consistent with other kiosk screen designs
+- **Key Classes**: `.tab`, `.tab-content`, `.official-card`, `.tourist-spot`, `.banner-section`
+
 ## 🎨 **Design System**
 
 ### **Color Palette**

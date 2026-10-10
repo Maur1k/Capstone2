@@ -87,4 +87,53 @@ class ActivityLogController extends Controller
 
         return view('admin.activity-logs.show', compact('activityLog'));
     }
+
+    public function filtered(Request $request)
+    {
+        $type = $request->get('type');
+        $query = ActivityLog::with('admin')
+            ->whereHas('admin', function ($q) {
+                $q->where('role', 'officer');
+            })
+            ->orderBy('created_at', 'desc');
+
+        switch ($type) {
+            case 'login':
+                $query->where('activity_type', 'login')
+                    ->whereDate('created_at', today());
+                break;
+            case 'status_change':
+                $query->where('activity_type', 'status_change')
+                    ->whereDate('created_at', today());
+                break;
+            case 'active_officers':
+                // Get activities from active officers in the last 24 hours
+                $query->whereHas('admin', function ($q) {
+                    $q->where('role', 'officer')
+                        ->where('is_active', true);
+                })->where('created_at', '>=', now()->subDay());
+                break;
+            default:
+                // Return recent activities (last 50)
+                $query->limit(50);
+                break;
+        }
+
+        $logs = $query->limit(20)->get();
+
+        return response()->json([
+            'logs' => $logs->map(function ($log) {
+                return [
+                    'id' => $log->id,
+                    'activity_type' => $log->activity_type,
+                    'description' => $log->description,
+                    'formatted_time' => $log->formatted_time,
+                    'admin' => [
+                        'name' => $log->admin->name,
+                        'department' => $log->admin->department
+                    ]
+                ];
+            })
+        ]);
+    }
 }

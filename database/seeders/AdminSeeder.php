@@ -10,29 +10,17 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        if (Admin::query()->exists()) {
-            return; // Already initialized
-        }
+        // Super Admin account
+        Admin::updateOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('admin123'),
+                'role' => 'super_admin',
+                'is_active' => true,
+                'department' => null,
+            ]
+        );
 
-        $name = env('ADMIN_NAME', 'Super Admin');
-        $email = env('ADMIN_EMAIL', 'admin@example.com');
-        $password = env('ADMIN_PASSWORD');
-
-        if (!$password) {
-            $password = 'SuperAdmin123!';
-        }
-
-        Admin::query()->create([
-            'name' => $name,
-            'email' => $email,
-            'password' => Hash::make($password),
-            'role' => 'super_admin',
-            'is_active' => true,
-            'department' => null,
-        ]);
     }
 }
-
-
-
-

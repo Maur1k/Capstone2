@@ -1,0 +1,272 @@
+/* Minimalist Tracking Page Styles - Poppins Font for Consistency */
+.tracking-page {
+    font-family: "Poppins", "Segoe UI", Roboto, Arial, sans-serif;
+    min-height: calc(100vh - 200px);
+    background: #f8f9fa;
+    padding: 60px 20px;
+}
+
+/* Ensure consistent font throughout */
+.tracking-page * {
+    font-family: "Poppins", "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.tracking-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.tracking-card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.tracking-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.tracking-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 12px 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.tracking-header p {
+    font-size: 15px;
+    color: #666;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+}
+
+.tracking-form {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 8px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.tracking-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+    background: #fff;
+    transition: all 0.2s ease;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.tracking-input:focus {
+    border-color: #00bcd4;
+    box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
+}
+
+.tracking-input.valid {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+.tracking-input.invalid {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+
+.tracking-input::placeholder {
+    color: #999;
+    font-weight: 400;
+}
+
+.input-validation {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+}
+
+.validation-icon {
+    width: 18px;
+    height: 18px;
+    display: none;
+    stroke-width: 2.5;
+}
+
+.valid-icon {
+    color: #10b981;
+}
+
+.invalid-icon {
+    color: #ef4444;
+}
+
+.tracking-input.valid ~ .input-validation .valid-icon {
+    display: block;
+}
+
+.tracking-input.invalid ~ .input-validation .invalid-icon {
+    display: block;
+}
+
+.input-help {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #666;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.5;
+}
+
+.error-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    margin-bottom: 24px;
+}
+
+.error-message svg {
+    width: 20px;
+    height: 20px;
+    color: #ef4444;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.error-content {
+    flex: 1;
+}
+
+.error-content strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #991b1b;
+    margin-bottom: 4px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.error-content p {
+    font-size: 14px;
+    color: #991b1b;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.5;
+}
+
+.track-btn {
+    width: 100%;
+    padding: 14px 24px;
+    background: #00bcd4;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 188, 212, 0.2);
+}
+
+.track-btn:hover:not(:disabled):not(.loading) {
+    background: #0097a7;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
+}
+
+.track-btn:active:not(:disabled):not(.loading) {
+    transform: translateY(0);
+}
+
+.track-btn:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: none;
+    transform: none;
+}
+
+.track-btn .btn-loading {
+    width: 18px;
+    height: 18px;
+    display: none;
+    animation: spin 1s linear infinite;
+}
+
+.track-btn.loading .btn-loading {
+    display: block;
+}
+
+.track-btn.loading span {
+    display: none;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tracking-page {
+        padding: 40px 16px;
+    }
+
+    .tracking-card {
+        padding: 32px 24px;
+    }
+
+    .tracking-header h1 {
+        font-size: 24px;
+    }
+
+    .tracking-header p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tracking-card {
+        padding: 24px 20px;
+    }
+
+    .tracking-header h1 {
+        font-size: 22px;
+    }
+}

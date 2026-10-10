@@ -1,214 +1,214 @@
-# Click2Serve System Transfer Guide
+# Click2Serve - Transfer & Setup Guide
 
-## 📋 **System Overview**
-This is a Laravel-based municipal kiosk system with:
-- Admin dashboard for super administrators
-- Officer dashboard for department officers
-- Activity logging system
-- Request management system
-- Service management
+## 📦 Before Transferring (On Source Device)
 
-## 🗂️ **Essential Files Structure**
+### Files to EXCLUDE from ZIP (to reduce size):
+These folders will be regenerated on the new device:
+- `Click2Serve/Click2Serve/vendor/` (PHP dependencies - ~150MB)
+- `print-service/node_modules/` (~50MB)
+- `chatbot-service/node_modules/` (~30MB)
+- `Click2Serve/Click2Serve/storage/logs/*.log` (optional)
+- `Click2Serve/Click2Serve/storage/framework/cache/*`
+- `Click2Serve/Click2Serve/storage/framework/sessions/*`
+- `Click2Serve/Click2Serve/storage/framework/views/*`
+
+### Files to INCLUDE (Important):
+- `Click2Serve/Click2Serve/.env` (contains your database and API credentials)
+- All batch files (`.bat`)
+- All other project files
+
+---
+
+## 🖥️ Setup on New Device
+
+### Prerequisites
+1. **XAMPP** (includes PHP 8.1+ and MySQL/MariaDB)
+   - Download: https://www.apachefriends.org/
+   - Install to `C:\xampp`
+
+2. **Composer** (PHP package manager)
+   - Download: https://getcomposer.org/download/
+   - Install globally
+
+3. **Node.js 16+** (for print and chatbot services)
+   - Download: https://nodejs.org/
+   - Install LTS version
+
+---
+
+## 📋 Step-by-Step Setup
+
+### Step 1: Extract the ZIP
 ```
-Click2Serve/
-├── Click2Serve/                 # Main Laravel application
-│   ├── app/
-│   │   ├── Http/Controllers/    # All controllers
-│   │   ├── Middleware/          # Authentication middleware
-│   │   └── Models/              # Database models
-│   ├── database/
-│   │   ├── migrations/          # Database schema
-│   │   └── seeders/             # Database seeders
-│   ├── public/                  # Web-accessible files
-│   │   ├── assets/              # Icons and images
-│   │   └── css/                 # Stylesheets
-│   ├── resources/views/         # Blade templates
-│   ├── routes/web.php           # Application routes
-│   └── .env                     # Environment configuration
-├── chatbot-service/             # Node.js chatbot service
-├── print-service/               # Node.js print service
-└── storage/                     # File storage
+Extract to: C:\xampp\htdocs\
 ```
-
-## 🚀 **Installation Steps on New Laptop**
-
-### **1. Prerequisites**
-- XAMPP (PHP 8.2+, MySQL, Apache)
-- Node.js (for chatbot and print services)
-- Composer (PHP dependency manager)
-- **Visual Studio Build Tools** (for print service native modules)
-
-### **2. Database Setup**
-1. Start XAMPP (Apache + MySQL)
-2. Create database: `click2serve`
-3. Import database or run migrations:
-   ```bash
-   cd Click2Serve
-   php artisan migrate
-   php artisan db:seed
-   ```
-
-### **3. Environment Configuration**
-1. Copy `.env.example` to `.env`
-2. Update database credentials:
-   ```
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=click2serve
-   DB_USERNAME=root
-   DB_PASSWORD=
-   ```
-3. Generate application key:
-   ```bash
-   php artisan key:generate
-   ```
-
-### **4. Visual Studio Build Tools Setup**
-**REQUIRED for Print Service to work!**
-
-The print service uses native Node.js modules (`usb`, `escpos-usb`) that require compilation:
-
-1. **Download Visual Studio Build Tools:**
-   - Go to: https://visualstudio.microsoft.com/downloads/
-   - Download "Build Tools for Visual Studio 2022"
-   - Install with these workloads:
-     - ✅ **C++ build tools**
-     - ✅ **Windows 10/11 SDK**
-     - ✅ **MSVC v143 - VS 2022 C++ x64/x86 build tools**
-
-2. **Alternative (Smaller Download):**
-   - Download "Visual Studio Installer"
-   - Select "C++ build tools" workload
-   - Install only the essential components
-
-### **5. Start Services**
-1. **Laravel Application:**
-   ```bash
-   cd Click2Serve
-   php artisan serve --host=127.0.0.1 --port=8000
-   ```
-
-2. **Chatbot Service:**
-   ```bash
-   cd chatbot-service
-   npm install
-   npm start
-   ```
-
-3. **Print Service:**
-   ```bash
-   cd print-service
-   npm install
-   npm start
-   ```
-
-## 🔧 **Configuration Files**
-
-### **Essential Files to Keep:**
-- `Click2Serve/.env` - Environment configuration
-- `Click2Serve/config/` - All configuration files
-- `Click2Serve/database/migrations/` - Database schema
-- `Click2Serve/database/seeders/` - Database seeders
-- `Click2Serve/routes/web.php` - Application routes
-- `Click2Serve/public/assets/` - Icons and images
-- `Click2Serve/public/css/` - Stylesheets
-
-### **Files Removed (No longer needed):**
-- Test files (`test-*.html`, `debug.php`)
-- Unused seeders (`TestRequestSeeder`, `TestOfficerSeeder`, `ActivityLogSeeder`)
-- Unused models (`User.php`, `SmsLog.php`)
-- Duplicate assets (kept only in `public/` folder)
-- Configuration scripts (`configure-*.bat`, `configure-*.ps1`)
-
-## 🗄️ **Database Requirements**
-
-### **Required Tables:**
-- `admins` - Admin and officer accounts
-- `activity_logs` - Officer activity tracking
-- `services` - Available services
-- `service_types` - Service categories
-- `civil_services` - Civil service requests
-- `other_services` - Other service requests
-- `settings` - System settings
-
-### **Default Admin Account:**
-- Email: `admin@example.com`
-- Password: `SuperAdmin123!`
-- Role: `super_admin`
-
-## 🌐 **Access URLs**
-
-### **Main Application:**
-- Home: `http://127.0.0.1:8000/`
-- Admin Login: `http://127.0.0.1:8000/admin/login`
-- Officer Login: `http://127.0.0.1:8000/officer/login`
-
-### **Services:**
-- Chatbot: `http://127.0.0.1:3000`
-- Print Service: `http://127.0.0.1:3001`
-
-## 🔐 **Default Accounts**
-
-### **Super Admin:**
-- Email: `admin@example.com`
-- Password: `SuperAdmin123!`
-
-### **Test Officer:**
-- Email: `officer@example.com`
-- Password: `password123`
-- Department: `City Veterinary Office`
-
-## 📝 **Important Notes**
-
-1. **File Permissions:** Ensure `storage/` and `bootstrap/cache/` are writable
-2. **Database:** Always backup before making changes
-3. **Environment:** Never commit `.env` file to version control
-4. **Logs:** Check `storage/logs/laravel.log` for errors
-5. **Cache:** Clear cache if issues occur: `php artisan cache:clear`
-
-## 🚨 **Troubleshooting**
-
-### **Common Issues:**
-1. **500 Error:** Check file permissions and `.env` configuration
-2. **Database Connection:** Verify MySQL is running and credentials are correct
-3. **Missing Assets:** Ensure `public/assets/` folder exists
-4. **Route Not Found:** Clear route cache: `php artisan route:clear`
-5. **Print Service Won't Start:** Install Visual Studio Build Tools (see step 4)
-6. **USB Module Compilation Error:** Ensure C++ build tools are installed
-
-### **Useful Commands:**
-```bash
-php artisan migrate:fresh --seed    # Reset database with seeders
-php artisan config:clear            # Clear configuration cache
-php artisan route:clear             # Clear route cache
-php artisan view:clear              # Clear view cache
+Final structure should be:
+```
+C:\xampp\htdocs\Click2Serve\
+├── Click2Serve\     <- Laravel app
+├── print-service\
+├── chatbot-service\
+└── docs\
 ```
 
-## 🖨️ **Print Service Dependencies**
+### Step 2: Start XAMPP Services
+1. Open XAMPP Control Panel
+2. Start **Apache**
+3. Start **MySQL**
 
-### **Why Visual Studio Build Tools are Required:**
-The print service uses these native Node.js modules that require compilation:
+### Step 3: Install Dependencies
+```
+Double-click: C:\xampp\htdocs\Click2Serve\Click2Serve\setup-new-device.bat
+```
+This will:
+- Install PHP dependencies (composer install)
+- Generate application key
+- Clear caches
+- Create storage link
+- Install Node.js dependencies for services
 
-- **`usb@1.6.3`** - USB device communication
-- **`escpos-usb@3.0.0-alpha.2`** - ESC/POS printer commands via USB
+### Step 4: Setup Database
+```
+Double-click: C:\xampp\htdocs\Click2Serve\Click2Serve\FRESH_SETUP.bat
+```
+This will:
+- Create the `click2serve` database
+- Run all migrations
+- Seed default data
 
-These modules contain C++ code that needs to be compiled for Windows.
+**Alternative Manual Setup:**
+```powershell
+cd C:\xampp\htdocs\Click2Serve\Click2Serve
+php artisan migrate --force
+php artisan db:seed --force
+```
 
-### **Installation Order:**
-1. **First:** Install Visual Studio Build Tools
-2. **Then:** Install Node.js
-3. **Finally:** Run `npm install` in print-service directory
+### Step 5: Configure Environment (if needed)
+Edit `Click2Serve\Click2Serve\.env` file:
+```env
+APP_URL=http://127.0.0.1:8000
 
-### **Verification:**
-After installation, verify with:
-```bash
-cd print-service
-npm install
-# Should complete without compilation errors
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=click2serve
+DB_USERNAME=root
+DB_PASSWORD=
+
+# SMS Service (Semaphore)
+SEMAPHORE_API_KEY=your_api_key_here
+SEMAPHORE_SENDER_NAME=Click2Serve
+SEMAPHORE_ENABLED=true
 ```
 
 ---
-**Last Updated:** $(date)
-**Version:** 1.0
-**Laravel Version:** 11.x
+
+## 🚀 Running the Application
+
+### Quick Start (Recommended)
+```
+Double-click: C:\xampp\htdocs\Click2Serve\Click2Serve\start-click2serve.bat
+```
+This starts all services automatically.
+
+### Manual Start
+
+**Terminal 1 - Laravel Server:**
+```powershell
+cd C:\xampp\htdocs\Click2Serve\Click2Serve
+php artisan serve
+```
+Access: http://127.0.0.1:8000
+
+**Terminal 2 - Print Service:**
+```powershell
+cd C:\xampp\htdocs\Click2Serve\print-service
+npm start
+```
+Runs on: http://localhost:4000
+
+**Terminal 3 - Chatbot Service:**
+```powershell
+cd C:\xampp\htdocs\Click2Serve\chatbot-service
+npm start
+```
+Runs on: http://localhost:5000
+
+---
+
+## 🔗 Access URLs
+
+| Feature | URL |
+|---------|-----|
+| Kiosk Mode | http://127.0.0.1:8000 |
+| Website | http://127.0.0.1:8000/website |
+| Admin Panel | http://127.0.0.1:8000/admin |
+| Officer Dashboard | http://127.0.0.1:8000/officer |
+| Service Tracker | http://127.0.0.1:8000/track |
+| Book Appointment | http://127.0.0.1:8000/service |
+
+---
+
+## 🔐 Default Login Credentials
+
+### Admin
+- URL: http://127.0.0.1:8000/admin
+- Email: `admin@example.com`
+- Password: `password`
+
+### Officer Accounts (after seeding)
+- Civil Registry: `civil@gmail.com` / `password`
+- BPLO: `bplo@gmail.com` / `password`
+- CTRU: `ctru@gmail.com` / `password`
+- Veterinary: `vet@gmail.com` / `password`
+
+---
+
+## ❗ Troubleshooting
+
+### "Class not found" errors
+```powershell
+cd C:\xampp\htdocs\Click2Serve\Click2Serve
+composer dump-autoload
+php artisan optimize:clear
+```
+
+### Database connection errors
+1. Ensure MySQL is running in XAMPP
+2. Check `.env` database credentials
+3. Verify database `click2serve` exists
+
+### Storage/Permission errors
+```powershell
+php artisan storage:link
+```
+On Windows, run as Administrator if needed.
+
+### CSS/JS not loading
+```powershell
+php artisan cache:clear
+php artisan view:clear
+```
+
+### SMS not sending
+1. Check `SEMAPHORE_API_KEY` in `.env`
+2. Ensure `SEMAPHORE_ENABLED=true`
+3. Check Laravel logs: `storage/logs/laravel.log`
+
+---
+
+## ✅ Setup Checklist
+
+- [ ] XAMPP installed
+- [ ] Composer installed
+- [ ] Node.js installed
+- [ ] XAMPP Apache & MySQL running
+- [ ] `setup-new-device.bat` completed
+- [ ] `FRESH_SETUP.bat` completed
+- [ ] `start-click2serve.bat` running
+- [ ] Can access http://127.0.0.1:8000
+- [ ] Can login to admin panel
+
+---
+
+**Last Updated:** November 2025

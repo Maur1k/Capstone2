@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wayfinding Tube Test</title>
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
+        #info { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: white; padding: 10px; border-radius: 5px; }
+        #canvas-container { width: 100%; height: 600px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h3>Wayfinding Tube Test</h3>
+        <p>This test shows the wayfinding tube geometry with:</p>
+        <ul>
+            <li>✅ Cylindrical tube geometry</li>
+            <li>✅ Emissive green material</li>
+            <li>✅ Directional arrows</li>
+            <li>✅ Pulse animation</li>
+            <li>✅ Interactive capabilities</li>
+        </ul>
+    </div>
+    <div id="canvas-container"></div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.149.0/build/three.module.js"
+        }
+    }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+
+        // Test wayfinding tube POI data
+        const testPoi = {
+            id: 9,
+            name: "Wayfinding Tube",
+            category: "Navigation",
+            x: 600,
+            y: 400,
+            meta: {
+                geometry_type: "tube",
+                tube_properties: {
+                    radius: 12,
+                    height: 120,
+                    segments: 16,
+                    color: "#00ff00",
+                    opacity: 0.8,
+                    animated: true,
+                    pulse_speed: 2.0,
+                    material: "emissive"
+                },
+                interactive: true,
+                wayfinding_features: ["direction_arrows", "distance_display", "route_highlighting"]
+            }
+        };
+
+        // Initialize Three.js scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight - 100);
+        renderer.setClearColor(0x222222);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Add lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(50, 50, 50);
+        scene.add(directionalLight);
+
+        // Create wayfinding tube
+        function createWayfindingTube(poi) {
+            const props = poi.meta.tube_properties;
+            
+            // Create tube geometry
+            const geometry = new THREE.CylinderGeometry(
+                props.radius || 12, // Reduced default radius
+                props.radius || 12,
+                props.height || 120, // Reduced default height
+                props.segments || 16
+            );
+            
+            // Create emissive material
+            const material = new THREE.MeshBasicMaterial({
+                color: props.color,
+                transparent: true,
+                opacity: props.opacity,
+                emissive: new THREE.Color(props.color),
+                emissiveIntensity: 0.3
+            });
+            
+            const tube = new THREE.Mesh(geometry, material);
+            tube.position.set(0, props.height / 2, 0);
+            
+            // Add directional arrows
+            const arrowGeometry = new THREE.ConeGeometry(5, 15, 8);
+            const arrowMaterial = new THREE.MeshBasicMaterial({
+                color: props.color,
+                emissive: new THREE.Color(props.color),
+                emissiveIntensity: 0.5
+            });
+            
+            const directions = [
+                { name: 'north', rotation: [0, 0, 0], position: [0, 0, props.radius + 10] },
+                { name: 'south', rotation: [0, Math.PI, 0], position: [0, 0, -props.radius - 10] },
+                { name: 'east', rotation: [0, -Math.PI/2, 0], position: [props.radius + 10, 0, 0] },
+                { name: 'west', rotation: [0, Math.PI/2, 0], position: [-props.radius - 10, 0, 0] }
+            ];
+            
+            directions.forEach(dir => {
+                const arrow = new THREE.Mesh(arrowGeometry, arrowMaterial);
+                arrow.rotation.set(...dir.rotation);
+                arrow.position.set(...dir.position);
+                arrow.userData = { direction: dir.name };
+                tube.add(arrow);
+            });
+            
+            // Add animation data
+            tube.userData = {
+                animation: {
+                    pulseSpeed: props.pulse_speed,
+                    originalScale: tube.scale.clone(),
+                    time: 0
+                }
+            };
+            
+            return tube;
+        }
+
+        // Create the wayfinding tube
+        const wayfindingTube = createWayfindingTube(testPoi);
+        scene.add(wayfindingTube);
+
+        // Position camera
+        camera.position.set(100, 80, 100);
+        camera.lookAt(0, 50, 0);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Animate the tube
+            if (wayfindingTube.userData.animation) {
+                const anim = wayfindingTube.userData.animation;
+                anim.time += 0.016;
+                
+                // Pulse animation
+                const pulse = Math.sin(anim.time * anim.pulseSpeed) * 0.1 + 1.0;
+                wayfindingTube.scale.copy(anim.originalScale).multiplyScalar(pulse);
+                
+                // Rotate arrows
+                wayfindingTube.children.forEach(child => {
+                    if (child.userData && child.userData.direction) {
+                        child.rotation.y += 0.01;
+                    }
+                });
+            }
+            
+            renderer.render(scene, camera);
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight - 100);
+        });
+
+        // Start animation
+        animate();
+        
+        console.log('Wayfinding tube test loaded successfully!');
+    </script>
+</body>
+</html>

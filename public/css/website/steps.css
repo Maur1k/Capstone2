@@ -1,0 +1,188 @@
+/* ---------- Page Background ---------- */
+body {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    line-height: 1.8;
+    color: #2b2b2b;
+    background: linear-gradient(180deg, #0077b6, #0096c7);
+    margin: 0;
+}
+
+/* ---------- Container ---------- */
+.container {
+    max-width: 960px;
+    margin: 60px auto;
+    padding: 0 24px;
+}
+
+/* ---------- Title ---------- */
+.title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 48px;
+    letter-spacing: 0.5px;
+}
+
+/* ---------- Step Cards ---------- */
+.step-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    padding: 32px;
+    margin: 0 auto 48px auto;
+    max-width: 720px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ---------- Step Numbers ---------- */
+.step-card h3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* center entire heading */
+    gap: 12px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #005f7f;
+    text-align: center;
+}
+
+.step-number {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: #0077b6;
+    /* 🔵 blue circle */
+    color: #ffffff;
+    /* ⚪ white number */
+    border-radius: 50%;
+    font-size: 1.2rem;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------- Two-column layout ---------- */
+.step-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+.step-image {
+    flex: 0 0 140px;
+    text-align: center;
+}
+
+.step-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.step-text {
+    flex: 1;
+}
+
+.step-text ul {
+    list-style: disc;
+    padding-left: 20px;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #2b2b2b;
+}
+
+/* ---------- Arrows Between Steps ---------- */
+.step-arrow {
+    display: flex;
+    justify-content: center;
+    margin: 28px 0;
+}
+
+.arrow-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #005f7f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(6px);
+    }
+}
+
+/* ---------- Button ---------- */
+.form-action {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.submit-btn {
+    background: #00b4d8;
+    color: #fff;
+    border: none;
+    padding: 14px 32px;
+    font-size: 1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.submit-btn:hover {
+    background: #0090b5;
+    transform: translateY(-2px);
+}
+
+/* ---------- Responsive Tweaks ---------- */
+@media (max-width: 768px) {
+    .step-row {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .step-image {
+        flex: none;
+        margin-bottom: 16px;
+    }
+
+    .step-text ul {
+        text-align: left;
+    }
+}
+
+@media (max-width: 600px) {
+    .title {
+        font-size: 1.6rem;
+    }
+
+    .step-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .submit-btn {
+        width: 100%;
+    }
+

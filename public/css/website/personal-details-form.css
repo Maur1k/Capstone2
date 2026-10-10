@@ -1,0 +1,119 @@
+/* FORM PAGE ONLY */
+
+/* Wrapper */
+.form-wrapper {
+    width: 100%;
+    max-width: 500px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    padding-bottom: 20px;
+}
+
+/* Header inside form */
+.form-box-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #0096c7;
+    color: #fff;
+    padding: 20px;
+    border-radius: 16px 16px 0 0;
+}
+
+.form-box-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #fff;
+}
+
+.form-box-header p {
+    margin: 2px 0 0;
+    font-size: 14px;
+    color: #e0f7ff;
+}
+
+/* Back button */
+.back-btn {
+    text-decoration: none;
+    color: #0077b6;
+    background: #f1faff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.back-btn i {
+    margin-right: 6px;
+}
+
+.back-btn:hover {
+    background: #0077b6;
+    color: #fff;
+}
+
+/* Form body */
+.form-body {
+    padding: 25px 30px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #0077b6;
+    font-size: 14px;
+}
+
+.form-group label i {
+    margin-right: 6px;
+    color: #0096c7;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #0096c7;
+    box-shadow: 0 0 6px rgba(0, 150, 199, 0.3);
+}
+
+/* Submit button */
+.primary-btn {
+    width: 100%;
+    background: #0096c7;
+    color: #fff;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.primary-btn:hover {
+    background: #0077b6;
+}
+
+.submit-link {
+    text-decoration: none;
+}

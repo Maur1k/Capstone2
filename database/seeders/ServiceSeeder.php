@@ -11,9 +11,9 @@ class ServiceSeeder extends Seeder
 {
     public function run(): void
     {
-        // Civil Registry Services
-        $civilService = Service::firstOrCreate(
-            ['name' => 'Civil Registry Services'],
+        // Prioritized Civil Services
+        $prioritizedCivilService = Service::firstOrCreate(
+            ['name' => 'Prioritized Civil Services'],
             [
                 'icon_path' => '/assets/icons/civil-services.png',
                 'is_active' => true,
@@ -21,63 +21,37 @@ class ServiceSeeder extends Seeder
             ]
         );
 
-        // Service Types for Civil Registry
-        $birthOnTime = ServiceType::firstOrCreate([
-            'service_id' => $civilService->id,
-            'name' => 'Certificate of Live Birth (On-time)'
+        // Service Types for Prioritized Civil Services
+        $delayedRegularNonBrap = ServiceType::firstOrCreate([
+            'service_id' => $prioritizedCivilService->id,
+            'name' => 'Delayed Regular Non-BRAP Birth Registration Assistance Project'
         ], [
             'is_active' => true
         ]);
 
-        $birthDelayed = ServiceType::firstOrCreate([
-            'service_id' => $civilService->id,
-            'name' => 'Certificate of Live Birth (Delayed)'
+        $delayedBrap = ServiceType::firstOrCreate([
+            'service_id' => $prioritizedCivilService->id,
+            'name' => 'Delayed BRAP Birth Registration Assistance Project'
         ], [
             'is_active' => true
         ]);
 
-        $marriageOnTime = ServiceType::firstOrCreate([
-            'service_id' => $civilService->id,
-            'name' => 'Certificate of Marriage (On-time)'
-        ], [
-            'is_active' => true
+        // Add service steps for Delayed Regular Non-BRAP
+        $this->createSteps($delayedRegularNonBrap->id, [
+            'Step 1: Fill out basic request information (Name, Contact Number)',
+            'Step 2: Submit request and receive tracking number',
+            'Step 3: Wait for officer to provide checklist of requirements',
+            'Step 4: Submit required documents for processing',
+            'Step 5: Request will be accepted after 10 business days'
         ]);
 
-        $marriageDelayed = ServiceType::firstOrCreate([
-            'service_id' => $civilService->id,
-            'name' => 'Certificate of Marriage (Delayed)'
-        ], [
-            'is_active' => true
-        ]);
-
-        // Add service steps for COLB On-time
-        $this->createSteps($birthOnTime->id, [
-            'Step 1: Fill out basic request information',
-            'Step 2: Provide detailed information sheet',
-            'Submit request and receive tracking number'
-        ]);
-
-        // Add service steps for COLB Delayed
-        $this->createSteps($birthDelayed->id, [
-            'Fill out basic request information (Personal details, birth information, contact details)',
-            'Provide additional documentation and verification',
-            'Review and confirm information, submit request',
-            'Receive tracking number and confirmation'
-        ]);
-
-        // Add service steps for COM On-time
-        $this->createSteps($marriageOnTime->id, [
-            'Step 1: Fill out basic request information',
-            'Step 2: Provide marriage details',
-            'Submit request and receive tracking number'
-        ]);
-
-        // Add service steps for COM Delayed
-        $this->createSteps($marriageDelayed->id, [
-            'Fill out basic request information (Applicant details, contact information)',
-            'Provide additional documentation and verification',
-            'Review and confirm information, submit request',
-            'Receive tracking number and confirmation'
+        // Add service steps for Delayed BRAP
+        $this->createSteps($delayedBrap->id, [
+            'Step 1: Fill out basic request information (Name, Contact Number)',
+            'Step 2: Submit request and receive tracking number',
+            'Step 3: Request will be encoded to BRAP Request List',
+            'Step 4: Officer will provide checklist of requirements',
+            'Step 5: Submit documents and wait for BRAP processing result'
         ]);
 
         // Business Permit and Licensing Office (BPLO) Services
@@ -300,6 +274,7 @@ class ServiceSeeder extends Seeder
             'Step 5: Post-vaccination examination and registration (2 minutes)',
             'Submit anti-rabies vaccination request and receive tracking number'
         ]);
+
     }
 
     private function createSteps($serviceTypeId, $stepDescriptions)

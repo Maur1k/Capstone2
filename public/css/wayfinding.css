@@ -1,0 +1,716 @@
+/* 
+ * 3D Wayfinding Kiosk CSS - Optimized for services page layout
+ * Features: Responsive 3D canvas, overlay controls, kiosk-optimized interface
+ */
+
+/* Header - Match services.css exactly for consistency */
+/* Override any conflicting styles from kiosk/styles.css */
+.stage .wrapper .header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 20px !important;
+    margin-bottom: 30px !important;
+    position: relative !important;
+    height: auto !important;
+    width: 100% !important;
+}
+
+.stage .wrapper .header-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 20px !important;
+    flex-shrink: 0 !important;
+    min-width: 48px !important;
+}
+
+.stage .wrapper .header-center {
+    flex: 1 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    min-width: 0 !important;
+}
+
+.stage .wrapper .header-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 20px !important;
+    flex-shrink: 0 !important;
+    min-width: 48px !important;
+}
+
+.stage .wrapper .back-button {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 50% !important;
+    width: 48px !important;
+    height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    color: white !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+    touch-action: manipulation !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+.stage .wrapper .info-button {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 50% !important;
+    width: 48px !important;
+    height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    color: white !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+    touch-action: manipulation !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+.stage .wrapper .page-title {
+    color: white !important;
+    font-size: 32px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    text-align: center !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Ensure wrapper padding matches services.css for consistent header positioning */
+.stage .wrapper {
+    padding: 40px 28px 20px !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+}
+
+/* Wayfinding Content Container */
+.wayfinding-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-sizing: border-box;
+}
+
+/* 3D Canvas Container */
+.canvas-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+    background: #f8fafc;
+    border-radius: 20px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+#three-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 20px;
+}
+
+/* Controls Overlay */
+.controls-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.controls-overlay>* {
+    pointer-events: auto;
+}
+
+/* Floor Selector */
+.floor-selector {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 2px solid transparent;
+    min-width: 200px;
+    max-width: 300px;
+    box-sizing: border-box;
+}
+
+.floor-selector h3 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.floor-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.floor-btn {
+    padding: 12px 16px;
+    background: var(--teal-700);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.floor-btn:hover {
+    background: var(--teal-800);
+    transform: translateY(-1px);
+}
+
+.floor-btn.active {
+    background: var(--teal-900);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* POI Panel */
+.poi-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 2px solid transparent;
+    min-width: 250px;
+    max-width: 350px;
+    max-height: 400px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.poi-panel h3 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.poi-search {
+    margin-bottom: 12px;
+}
+
+.poi-search input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    transition: border-color 0.2s ease;
+}
+
+.poi-search input:focus {
+    outline: none;
+    border-color: var(--teal-700);
+    box-shadow: 0 0 0 3px rgba(14, 144, 166, 0.1);
+}
+
+.poi-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.poi-item {
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.poi-item:hover {
+    background: var(--teal-700);
+    color: white;
+    transform: translateX(4px);
+}
+
+/* Route Panel */
+.route-panel {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 2px solid transparent;
+    min-width: 300px;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+.route-panel h3 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.route-info {
+    margin-bottom: 16px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.route-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: var(--teal-700);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--teal-800);
+}
+
+.btn-secondary {
+    background: #e2e8f0;
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background: #cbd5e1;
+}
+
+/* Navigation Controls */
+.navigation-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nav-btn {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    color: var(--text-primary);
+}
+
+.nav-btn:hover {
+    background: var(--teal-700);
+    color: white;
+    transform: scale(1.05);
+}
+
+.nav-btn:active {
+    transform: scale(0.95);
+}
+
+/* Status Bar */
+.status-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.status-left,
+.status-right {
+    display: flex;
+    gap: 20px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Loading Screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+.loading-logo {
+    margin-bottom: 20px;
+}
+
+.logo-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-text h2 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.loading-text p {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+.loading-progress {
+    width: 200px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.progress-bar {
+    height: 100%;
+    background: white;
+    border-radius: 2px;
+    animation: progress 2s ease-in-out infinite;
+}
+
+@keyframes progress {
+    0% {
+        width: 0%;
+    }
+
+    50% {
+        width: 70%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+/* Ensure wrapper padding matches services.css for consistent header positioning */
+.stage .wrapper {
+    padding: 40px 28px 20px !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+}
+
+/* Responsive Design - Ensure header alignment at tablet resolution */
+@media (min-width: 1024px) and (max-width: 1200px) {
+    .stage .wrapper .header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 20px !important;
+        margin-bottom: 30px !important;
+        width: 100% !important;
+    }
+
+    .stage .wrapper .header-left,
+    .stage .wrapper .header-right {
+        flex-shrink: 0 !important;
+        min-width: 48px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .stage .wrapper .header-center {
+        flex: 1 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        min-width: 0 !important;
+    }
+
+    .stage .wrapper .page-title {
+        font-size: 28px !important;
+        margin: 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .stage .wrapper .back-button,
+    .stage .wrapper .info-button {
+        width: 48px !important;
+        height: 48px !important;
+        flex-shrink: 0 !important;
+    }
+}
+
+/* Specific fix for iPad Air 1180x820 resolution */
+@media (width: 1180px) and (height: 820px) {
+    .stage .wrapper .header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 20px !important;
+    }
+
+    .stage .wrapper .header-left {
+        flex-shrink: 0 !important;
+        width: auto !important;
+    }
+
+    .stage .wrapper .header-center {
+        flex: 1 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .stage .wrapper .header-right {
+        flex-shrink: 0 !important;
+        width: auto !important;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .floor-selector,
+    .poi-panel {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        margin: 10px;
+        max-width: none;
+    }
+
+    .controls-overlay {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .navigation-controls {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        flex-direction: row;
+        justify-content: center;
+        margin: 10px;
+    }
+
+    .status-bar {
+        position: relative;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .status-left,
+    .status-right {
+        justify-content: center;
+    }
+}
+
+/* Hide loading screen when app is ready */
+#app:not([style*="display: none"])~.loading-screen {
+    display: none;
+}
+
+/* Custom scrollbar for webkit browsers */
+.poi-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.poi-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.poi-list::-webkit-scrollbar-thumb {
+    background: var(--teal-700);
+    border-radius: 3px;
+}
+
+.poi-list::-webkit-scrollbar-thumb:hover {
+    background: var(--teal-800);
+}
+
+/* Responsive Design - Ensure header alignment at tablet resolution (iPad Air 1180x820) */
+@media (min-width: 1024px) and (max-width: 1200px) {
+    .stage .wrapper .header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 20px !important;
+        margin-bottom: 30px !important;
+        width: 100% !important;
+    }
+
+    .stage .wrapper .header-left,
+    .stage .wrapper .header-right {
+        flex-shrink: 0 !important;
+        min-width: 48px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .stage .wrapper .header-center {
+        flex: 1 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        min-width: 0 !important;
+    }
+
+    .stage .wrapper .page-title {
+        font-size: 28px !important;
+        margin: 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .stage .wrapper .back-button,
+    .stage .wrapper .info-button {
+        width: 48px !important;
+        height: 48px !important;
+        flex-shrink: 0 !important;
+    }
+}
+
+/* Specific fix for iPad Air 1180x820 resolution */
+@media (width: 1180px) and (height: 820px) {
+    .stage .wrapper .header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 20px !important;
+    }
+
+    .stage .wrapper .header-left {
+        flex-shrink: 0 !important;
+        width: auto !important;
+    }
+
+    .stage .wrapper .header-center {
+        flex: 1 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .stage .wrapper .header-right {
+        flex-shrink: 0 !important;
+        width: auto !important;
+    }
+}

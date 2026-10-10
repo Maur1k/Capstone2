@@ -1,0 +1,77 @@
+/* Appointment Details Page - Minimalist & Professional */
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+}
+
+/* Personal Details Section */
+.personal-details-section {
+    margin-bottom: 24px;
+}
+
+.personal-details-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #008CBA;
+    margin-bottom: 20px;
+}
+
+/* Information Summary */
+.info-summary {
+    margin: 24px 0;
+}
+
+.summary-card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    padding: 20px;
+    border-left: 3px solid #00bcd4;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.summary-card h5 {
+    margin: 0 0 16px 0;
+    color: #008CBA;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.summary-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-label {
+    color: #555;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.summary-value {
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .summary-card {
+        padding: 16px;
+    }
+}

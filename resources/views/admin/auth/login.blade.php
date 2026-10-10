@@ -4,66 +4,85 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Login</title>
-    <link rel="stylesheet" href="/css/admin.css">
+    <title>Admin Login - Click2Serve</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 
-<body class="alaminos-background" style="min-height:100vh; display:flex; align-items:center; justify-content:center;">
-    <div class="container-narrow"
-        style="display:flex; align-items:center; justify-content:center; min-height:100vh; position:relative; z-index:2;">
-        <div class="alaminos-card" style="width:100%; max-width:500px; padding:32px;">
-            <div class="page-header">
-                <div class="action-bar-left">
-                    <h2 class="alaminos-title">LOG IN ADMIN ACCOUNT</h2>
-                    <p class="alaminos-subtitle">Welcome to Alaminos City Click2Serve System</p>
+<body class="admin-login">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    <img src="{{ asset('assets/logo/logo_click2serve.png') }}" alt="Click2Serve Logo"
+                        class="login-logo-img">
                 </div>
+                <h1 class="login-title">Admin Login</h1>
+                <p class="login-subtitle">Welcome to Alaminos City Click2Serve System</p>
             </div>
 
-            <div class="card" style="background: transparent; box-shadow: none; border: none; padding: 0;">
-                <div class="card-header">
-                    <h3 class="card-title">Admin Login</h3>
+            <form method="POST" action="{{ route('admin.login.attempt') }}" class="login-form">
+                @csrf
+                @if (session('status'))
+                    <div class="form-success">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{{ session('status') }}</span>
+                    </div>
+                @endif
+
+                @if ($errors->any() && !$errors->has('email') && !$errors->has('password'))
+                    <div class="form-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>{{ $errors->first() }}</span>
+                    </div>
+                @endif
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus
+                        class="form-input" placeholder="Enter your email address">
+                    @error('email')
+                        <div class="form-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
                 </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('admin.login.attempt') }}">
-                        @csrf
-                        @if (session('status'))
-                            <div
-                                style="background:#ecfdf5;color:#065f46;padding:10px;border-radius:6px;margin-bottom:12px;">
-                                {{ session('status') }}
-                            </div>
-                        @endif
 
-                        <div class="form-group">
-                            <label for="email" class="form-label">Email</label>
-                            <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus
-                                class="form-input">
-                            @error('email')
-                                <div class="form-error">{{ $message }}</div>
-                            @enderror
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="password-group">
+                        <input id="password" name="password" type="password" required class="form-input"
+                            placeholder="Enter your password">
+                        <button type="button" onclick="togglePassword('password')" class="password-toggle"
+                            aria-label="Toggle password visibility">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    @error('password')
+                        <div class="form-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ $message }}</span>
                         </div>
-
-                        <div class="form-group">
-                            <label for="password" class="form-label">Password</label>
-                            <div style="position:relative;">
-                                <input id="password" name="password" type="password" required class="form-input">
-                                <button type="button" onclick="togglePassword('password')"
-                                    style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:#f8f9fa; border:1px solid #dee2e6; border-radius:4px; cursor:pointer; font-size:12px; color:#6c757d; padding:4px 8px; height:28px;">
-                                    Show
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label style="font-size:14px; display:flex; gap:6px; align-items:center;">
-                                <input type="checkbox" name="remember"> Remember me
-                            </label>
-                        </div>
-
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Login</button>
-                        </div>
-                    </form>
+                    @enderror
                 </div>
+
+                <div class="remember-group">
+                    <div class="remember-checkbox">
+                        <input type="checkbox" name="remember" id="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>Alaminos City Click2Serve System &copy; {{ date('Y') }}</p>
             </div>
         </div>
     </div>
@@ -71,16 +90,29 @@
     <script>
         function togglePassword(fieldId) {
             const field = document.getElementById(fieldId);
-            const button = field.nextElementSibling;
+            const passwordGroup = field.closest('.password-group');
+            const button = passwordGroup ? passwordGroup.querySelector('.password-toggle') : field.nextElementSibling;
+
+            if (!button) return;
+
+            const icon = button.querySelector('i');
+            if (!icon) return;
 
             if (field.type === 'password') {
                 field.type = 'text';
-                button.textContent = 'Hide';
+                icon.className = 'fas fa-eye-slash';
             } else {
                 field.type = 'password';
-                button.textContent = 'Show';
+                icon.className = 'fas fa-eye';
             }
         }
+
+        // Add loading state to form submission
+        document.querySelector('.login-form').addEventListener('submit', function (e) {
+            const submitBtn = this.querySelector('.login-btn');
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+        });
     </script>
 </body>
 

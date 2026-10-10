@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page</title>
+</head>
+<body>
+    <h1>Test Page</h1>
+    <p>If you can see this, the server is working.</p>
+    <script>
+        console.log('Test page loaded successfully');
+        // Test if main.js can be loaded
+        fetch('./main.js')
+            .then(response => {
+                console.log('main.js response status:', response.status);
+                if (response.ok) {
+                    console.log('main.js loaded successfully');
+                } else {
+                    console.error('main.js failed to load:', response.status);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading main.js:', error);
+            });
+    </script>
+</body>
+</html>

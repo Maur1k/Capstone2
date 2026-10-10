@@ -1,0 +1,179 @@
+.page-background {
+    background-color: #007BFF;
+    min-height: 100vh;
+    padding: 40px 0;
+}
+
+.marriage-form-container {
+    background: #ffffff;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.form-title,
+.marriage-form h2,
+.marriage-form label {
+    color: #333;
+}
+
+.marriage-form input,
+.marriage-form textarea {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.half {
+    width: 48%;
+    margin-right: 2%;
+}
+
+.third {
+    width: 30%;
+    margin-right: 3%;
+}
+
+.column {
+    width: 48%;
+    margin-right: 2%;
+}
+
+.form-submit {
+    text-align: center;
+}
+
+.submit-btn {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+.dob-age-sex {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.form-group.third {
+    width: 35%;
+    margin-right: 2%;
+}
+
+.form-group.small {
+    width: 15%;
+    margin-right: 2%;
+}
+
+.dob-age-sex input[type="number"],
+.dob-age-sex input[type="text"],
+.dob-age-sex input[type="date"] {
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 6px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+/* ---------- Inline input boxes ---------- */
+.inline-input {
+    display: inline-block;
+    border: 1px solid #ccc;
+    padding: 3px 5px;
+    background: #f9f9f9;
+    margin: 0 4px;
+}
+
+.inline-input.short {
+    width: 120px;
+}
+
+.inline-input.medium {
+    width: 100px;
+    text-align: center;
+}
+
+.inline-input.xshort {
+    width: 60px;
+    text-align: center;
+}
+
+/* ---------- Certification Section ---------- */
+.cert-options {
+    margin-top: 15px;
+}
+
+.cert-options label {
+    display: flex;
+    /* checkbox + text on same line */
+    align-items: flex-start;
+    /* top-align checkbox with text */
+    gap: 8px;
+    /* space between checkbox and text */
+    line-height: 1.6;
+    margin-bottom: 12px;
+    /* spacing between a, b, c options */
+    cursor: pointer;
+    /* clicking anywhere toggles checkbox */
+    flex-wrap: wrap;
+    /* allow inputs to wrap on narrow screens */
+}
+
+/* smaller inline inputs inside the cert options for cleaner look */
+.cert-options .inline-input.short {
+    width: 120px;
+}
+
+.cert-options .inline-input.xshort {
+    width: 60px;
+}
+
+.inline-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+/* ---------- FIX for a / b / c checkboxes ---------- */
+.cert-options label.cert-item {
+    display: block;
+    /* each a/b/c option on its own line */
+    margin-bottom: 12px;
+    /* spacing between a,b,c */
+    line-height: 1.6;
+}
+
+.cert-options label.cert-item input[type="checkbox"] {
+    vertical-align: middle;
+    /* keep checkbox aligned with text */
+    margin-right: 6px;
+    /* small gap between checkbox and text */
+}
+
+.inline-label {
+    display: inline-flex;
+    /* stay inline with the text */
+    align-items: center;
+    /* vertical align checkbox with text */
+    margin: 0 4px;
+    /* small spacing left/right */
+    white-space: nowrap;
+    /* keep text and checkbox together */
+}

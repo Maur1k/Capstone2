@@ -14,6 +14,7 @@ class ServiceType extends Model
         'name',
         'icon_path',
         'is_active',
+        'display_order',
     ];
 
     public function service()
@@ -26,6 +27,9 @@ class ServiceType extends Model
         return $this->hasMany(ServiceStep::class);
     }
 }
+
+
+
 
 
 

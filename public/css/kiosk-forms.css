@@ -1,0 +1,845 @@
+/* 
+ * Kiosk Forms CSS - Updated UI matching reference design
+ * Used by: All service kiosk forms
+ * Features: Clean white card design, tablet-optimized layout, consistent with services page
+ */
+
+:root {
+    --teal-700: #0e90a6;
+    --teal-800: #087a93;
+    --teal-900: #0a6a80;
+    --card-shadow: 0 15px 35px rgba(0, 0, 0, .18);
+    --gradient-bg: linear-gradient(180deg, #0e90a6 0%, #087a93 50%, #0a6a80 100%);
+    --form-bg: #ffffff;
+    --input-bg: #f8f9fa;
+    --input-border: #e2e8f0;
+    --input-focus: #0e90a6;
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    color: var(--text-primary);
+    background: var(--gradient-bg);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Lock canvas to 1160 x 820 (stage) and 1180 x 840 (viewport) - same as services page */
+.viewport {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1180px;
+    height: 820px;
+    min-height: 820px;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.stage {
+    width: 1160px;
+    height: 800px;
+    position: relative;
+    overflow: hidden;
+    background: url('../assets/icons/backgorund_2.png') center top/cover no-repeat;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, .3);
+    max-width: 1160px;
+    max-height: 800px;
+    box-sizing: border-box;
+}
+
+.wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 28px 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.back-button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    position: absolute;
+    left: 0;
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateX(-2px);
+}
+
+.page-title {
+    color: white;
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    flex: 1;
+}
+
+/* Main content */
+.main-content {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 5px 0;
+    padding-top: 10px;
+}
+
+/* Form Container - White card matching reference */
+.form-container {
+    background: var(--form-bg);
+    border-radius: 20px;
+    padding: 25px 35px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    max-width: 480px;
+    width: 90%;
+    max-height: 550px;
+    position: relative;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+}
+
+/* Kiosk form container - wider to match other screens */
+.form-container.kiosk-form-container {
+    max-width: 800px;
+    width: 95%;
+}
+
+/* Step Indicator */
+.step-indicator {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.step-badge {
+    background: linear-gradient(135deg, var(--teal-700) 0%, var(--teal-800) 100%);
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 10px 28px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(14, 144, 166, 0.3);
+}
+
+.form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--teal-700), var(--teal-800), var(--teal-900));
+}
+
+/* Form Header */
+.form-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.form-header h2 {
+    color: var(--text-primary);
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 15px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-description {
+    color: var(--text-secondary);
+    font-size: 16px;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Form Fields */
+.kiosk-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-label {
+    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    display: block;
+}
+
+.form-input {
+    width: 100%;
+    padding: 20px 24px;
+    border: 2px solid var(--input-border);
+    border-radius: 12px;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(14, 144, 166, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+    background: #ffffff;
+}
+
+.form-input::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* Enhanced Form Elements */
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    right: 16px;
+    color: var(--text-muted);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.required-asterisk {
+    color: #e53e3e;
+    font-weight: 600;
+}
+
+.validation-message {
+    display: none;
+    color: #e53e3e;
+    font-size: 14px;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.input-hint {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+.form-input.error {
+    border-color: #e53e3e;
+    background-color: #fed7d7;
+    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+}
+
+.form-input.success {
+    border-color: #38a169;
+    background-color: #f0fff4;
+    box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.1);
+}
+
+/* Service Information Card */
+.service-info-card {
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    border: 2px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 20px;
+    margin: 30px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+}
+
+.service-info-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    color: var(--teal-700);
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.service-info-header svg {
+    margin-right: 12px;
+}
+
+.service-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+.info-value {
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 16px;
+    text-align: right;
+    max-width: 60%;
+    word-wrap: break-word;
+}
+
+/* Enhanced Button States */
+.btn.ready {
+    background: var(--teal-700);
+    color: white;
+    border-color: var(--teal-700);
+    box-shadow: 0 4px 16px rgba(14, 144, 166, 0.3);
+}
+
+.btn.ready:hover {
+    background: var(--teal-800);
+    border-color: var(--teal-800);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(14, 144, 166, 0.4);
+}
+
+.btn.success {
+    background: #38a169;
+    color: white;
+    border-color: #38a169;
+}
+
+.btn:disabled {
+    background: #e2e8f0;
+    color: #a0aec0;
+    border-color: #e2e8f0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid rgba(14, 144, 166, 0.1);
+}
+
+/* Buttons */
+.btn {
+    padding: 18px 40px;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: var(--form-bg);
+    color: var(--text-primary);
+    border-color: var(--input-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border-color: var(--input-focus);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border-color: var(--input-border);
+    margin-right: 20px;
+}
+
+.btn-secondary:hover {
+    background: var(--input-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading states */
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btn-loading {
+    display: none;
+}
+
+/* Progress Indicator */
+.progress-indicator {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 2px solid var(--input-focus);
+    border-radius: 12px;
+    margin: 20px 0;
+    animation: slideIn 0.3s ease-out;
+}
+
+.progress-indicator.show {
+    display: flex;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.progress-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    color: var(--input-focus);
+}
+
+.progress-message {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.progress-icon .spinner {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Chat button - positioned like in reference */
+.chat {
+    position: absolute;
+    right: 30px;
+    bottom: 80px;
+    background: #fff;
+    color: var(--text-primary);
+    border: 2px solid var(--input-border);
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+    font-size: 12px;
+    font-weight: 600;
+    box-sizing: border-box;
+}
+
+.chat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+}
+
+.chat img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+}
+
+/* Footer */
+.footer {
+    position: absolute;
+    right: 22px;
+    bottom: 8px;
+    color: rgba(255, 255, 255, .8);
+    font-size: 12px;
+}
+
+/* Responsive design - removed fluid tablet overrides for consistency */
+
+@media (max-width: 900px) {
+    .form-container {
+        padding: 30px 40px;
+        max-width: 450px;
+    }
+
+    .form-container.kiosk-form-container {
+        max-width: 650px;
+        width: 95%;
+    }
+
+    .page-title {
+        font-size: 28px;
+    }
+
+    .form-header h2 {
+        font-size: 24px;
+    }
+
+    .form-label {
+        font-size: 16px;
+    }
+
+    .form-input {
+        font-size: 16px;
+        padding: 16px 20px;
+    }
+
+    .btn {
+        font-size: 18px;
+        padding: 16px 35px;
+        min-width: 160px;
+    }
+}
+
+@media (max-width: 600px) {
+    .wrapper {
+        padding: 15px;
+    }
+
+    .form-container {
+        padding: 25px 30px;
+        max-width: 400px;
+    }
+
+    .form-container.kiosk-form-container {
+        max-width: 100%;
+        width: 98%;
+    }
+
+    .step-badge {
+        font-size: 16px;
+        padding: 8px 24px;
+    }
+
+    .form-header h2 {
+        font-size: 22px;
+    }
+
+    .form-label {
+        font-size: 15px;
+    }
+
+    .form-input {
+        font-size: 15px;
+        padding: 14px 18px;
+    }
+
+    .btn {
+        font-size: 16px;
+        padding: 14px 30px;
+        min-width: 140px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .btn-secondary {
+        margin-right: 0;
+    }
+}
+
+/* Animation for form appearance */
+.form-container {
+    animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus states for better accessibility */
+.form-input:focus {
+    outline: 2px solid var(--input-focus);
+    outline-offset: 2px;
+}
+
+.btn:focus {
+    outline: 2px solid var(--input-focus);
+    outline-offset: 2px;
+}
+
+/* Enhanced Touch Interactions */
+.form-input {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.form-input:focus {
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+/* Touch-friendly sizing for kiosk */
+@media (min-width: 1024px) {
+    .form-input {
+        min-height: 60px;
+        font-size: 20px;
+        padding: 20px 24px;
+    }
+
+    .btn {
+        min-height: 60px;
+        font-size: 22px;
+        padding: 20px 45px;
+    }
+
+    .form-label {
+        font-size: 20px;
+    }
+
+    .form-header h2 {
+        font-size: 32px;
+    }
+}
+
+/* Tablet and Kiosk Optimizations removed for fixed 1180x820 layout */
+
+/* Mobile optimizations kept for future use */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 5px;
+        padding-top: 20px;
+    }
+
+    .form-container {
+        padding: 15px 12px;
+        max-width: 100%;
+        width: 98%;
+        max-height: 80vh;
+    }
+
+    .form-header h2 {
+        font-size: 20px;
+        line-height: 1.3;
+        margin-bottom: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-label {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .form-input {
+        padding: 14px 16px;
+        font-size: 16px;
+    }
+
+    .input-icon {
+        right: 12px;
+    }
+
+    .input-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .btn {
+        padding: 14px 28px;
+        font-size: 16px;
+        min-width: 140px;
+    }
+
+    .service-info-card {
+        padding: 15px;
+        margin: 20px 0;
+    }
+
+    .service-info-header {
+        font-size: 14px;
+    }
+
+    .info-label,
+    .info-value {
+        font-size: 13px;
+    }
+}
+
+/* Large Tablet and Kiosk Screens - removed for consistency */
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .form-input {
+        font-size: 20px;
+        padding: 20px 24px;
+    }
+
+    .btn {
+        padding: 20px 45px;
+        font-size: 22px;
+        min-width: 200px;
+    }
+
+    .form-label {
+        font-size: 20px;
+    }
+
+    /* Larger touch targets */
+    .form-input,
+    .btn {
+        min-height: 60px;
+    }
+
+    /* Remove hover effects on touch devices */
+    .btn:hover {
+        transform: none;
+        box-shadow: inherit;
+    }
+
+    .form-input:hover {
+        border-color: inherit;
+        box-shadow: inherit;
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+
+    .form-input,
+    .btn {
+        border-width: 1px;
+    }
+
+    .service-info-card {
+        border-width: 1px;
+    }
+}

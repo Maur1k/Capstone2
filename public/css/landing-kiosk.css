@@ -1,0 +1,616 @@
+/* 
+ * Landing Page / Splash Screen CSS for Kiosk
+ * Used by: Kiosk landing page component
+ * Features: Minimalist design, iPad-optimized, touch-friendly
+ */
+
+/* Landing Page / Splash Screen Styles */
+.landing-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #0e90a6 0%, #087a93 50%, #0a6a80 100%);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    overflow: hidden;
+    /* Touch optimizations for iPad */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.landing-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Decorative background elements */
+.landing-bg-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.15;
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    animation: patternMove 20s ease-in-out infinite;
+}
+
+@keyframes patternMove {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(-20px, -20px) scale(1.1);
+    }
+}
+
+/* Floating particles */
+.landing-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    animation: float 15s infinite ease-in-out;
+}
+
+.particle:nth-child(1) {
+    width: 80px;
+    height: 80px;
+    left: 10%;
+    top: 20%;
+    animation-delay: 0s;
+    animation-duration: 20s;
+}
+
+.particle:nth-child(2) {
+    width: 120px;
+    height: 120px;
+    right: 15%;
+    top: 60%;
+    animation-delay: 2s;
+    animation-duration: 25s;
+}
+
+.particle:nth-child(3) {
+    width: 60px;
+    height: 60px;
+    left: 70%;
+    top: 10%;
+    animation-delay: 4s;
+    animation-duration: 18s;
+}
+
+.particle:nth-child(4) {
+    width: 100px;
+    height: 100px;
+    right: 30%;
+    bottom: 20%;
+    animation-delay: 1s;
+    animation-duration: 22s;
+}
+
+.particle:nth-child(5) {
+    width: 70px;
+    height: 70px;
+    left: 50%;
+    top: 80%;
+    animation-delay: 3s;
+    animation-duration: 19s;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0.2;
+    }
+
+    25% {
+        transform: translate(30px, -30px) rotate(90deg);
+        opacity: 0.3;
+    }
+
+    50% {
+        transform: translate(-20px, 20px) rotate(180deg);
+        opacity: 0.25;
+    }
+
+    75% {
+        transform: translate(20px, 30px) rotate(270deg);
+        opacity: 0.3;
+    }
+}
+
+.landing-content {
+    text-align: center;
+    color: white;
+    padding: 40px;
+    max-width: 800px;
+    animation: fadeInUp 0.8s ease-out;
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.landing-logo {
+    width: 350px;
+    height: 350px;
+    margin: 0 auto 40px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(15px);
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.2),
+        inset 0 0 40px rgba(255, 255, 255, 0.1);
+    animation: pulse 2s ease-in-out infinite;
+    position: relative;
+}
+
+.landing-logo::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+    animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow:
+            0 15px 35px rgba(0, 0, 0, 0.2),
+            inset 0 0 40px rgba(255, 255, 255, 0.1);
+    }
+
+    50% {
+        transform: scale(1.05);
+        box-shadow:
+            0 20px 45px rgba(0, 0, 0, 0.3),
+            inset 0 0 50px rgba(255, 255, 255, 0.15);
+    }
+}
+
+.landing-logo-img {
+    width: 300px;
+    height: 300px;
+    object-fit: contain;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+/* Decorative icon rings around logo */
+.landing-icon-ring {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: rotateRing 20s linear infinite;
+}
+
+.landing-icon-ring::before,
+.landing-icon-ring::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.landing-icon-ring::before {
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.landing-icon-ring::after {
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@keyframes rotateRing {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+.landing-title {
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    letter-spacing: -1px;
+    position: relative;
+}
+
+.landing-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 2px;
+    animation: expandLine 1s ease-out 0.5s both;
+}
+
+@keyframes expandLine {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100px;
+    }
+}
+
+.landing-subtitle {
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 30px;
+    opacity: 0.95;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.landing-tagline {
+    font-size: 18px;
+    font-weight: 300;
+    opacity: 0.9;
+    line-height: 1.6;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+}
+
+/* Feature icons */
+.landing-features {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.landing-feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.landing-feature:nth-child(1) {
+    animation-delay: 0.3s;
+}
+
+.landing-feature:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.landing-feature:nth-child(3) {
+    animation-delay: 0.7s;
+}
+
+.landing-feature-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.landing-feature-icon svg {
+    width: 30px;
+    height: 30px;
+    stroke: white;
+    fill: none;
+    opacity: 0.9;
+}
+
+.landing-feature-label {
+    font-size: 14px;
+    font-weight: 400;
+    opacity: 0.85;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.landing-hint {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px;
+    font-weight: 400;
+    color: white;
+    opacity: 0.95;
+    text-align: center;
+    animation: fadeInOut 2s ease-in-out infinite;
+    z-index: 2;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes fadeInOut {
+
+    0%,
+    100% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* iPad and Tablet Optimizations */
+@media (min-width: 768px) and (max-width: 1366px) {
+    .landing-content {
+        padding: 50px 40px;
+    }
+
+    .landing-logo {
+        width: 300px;
+        height: 300px;
+        margin-bottom: 35px;
+    }
+
+    .landing-logo-img {
+        width: 250px;
+        height: 250px;
+    }
+
+    .landing-icon-ring {
+        width: 270px;
+        height: 270px;
+    }
+
+    .landing-title {
+        font-size: 34px;
+    }
+
+    .landing-subtitle {
+        font-size: 22px;
+    }
+
+    .landing-tagline {
+        font-size: 17px;
+    }
+
+    .landing-features {
+        gap: 35px;
+    }
+
+    .landing-feature-icon {
+        width: 55px;
+        height: 55px;
+    }
+
+    .landing-feature-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* iPad Air specific (1180x820) and similar landscape tablets */
+@media (max-width: 1200px) and (max-height: 850px) {
+    .landing-logo {
+        width: 280px;
+        height: 280px;
+        margin-bottom: 25px;
+    }
+
+    .landing-logo-img {
+        width: 220px;
+        height: 220px;
+    }
+
+    .landing-title {
+        font-size: 42px;
+        margin-bottom: 15px;
+    }
+
+    .landing-subtitle {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .landing-features {
+        margin-top: 25px;
+        gap: 25px;
+    }
+
+    .landing-hint {
+        bottom: 30px;
+    }
+}
+
+/* iPad Pro and larger tablets */
+@media (min-width: 1024px) and (max-width: 1366px) {
+    .landing-content {
+        max-width: 900px;
+    }
+
+    .particle:nth-child(1) {
+        width: 100px;
+        height: 100px;
+    }
+
+    .particle:nth-child(2) {
+        width: 140px;
+        height: 140px;
+    }
+}
+
+/* Touch-friendly enhancements */
+@media (hover: none) and (pointer: coarse) {
+    .landing-overlay {
+        /* Enhanced touch target */
+        min-height: 44px;
+        min-width: 44px;
+        /* Better touch feedback */
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .landing-overlay:active {
+        opacity: 0.95 !important;
+    }
+
+    .landing-hint {
+        font-size: 17px;
+    }
+
+    .landing-feature-icon {
+        min-width: 64px;
+        min-height: 64px;
+        /* Touch feedback */
+        transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .landing-feature-icon:active {
+        transform: scale(0.95);
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Prevent text selection on touch */
+    .landing-content,
+    .landing-hint {
+        -webkit-user-select: none;
+        user-select: none;
+    }
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 767px) {
+    .landing-title {
+        font-size: 28px;
+    }
+
+    .landing-subtitle {
+        font-size: 20px;
+    }
+
+    .landing-tagline {
+        font-size: 16px;
+    }
+
+    .landing-logo {
+        width: 250px;
+        height: 250px;
+        margin-bottom: 30px;
+    }
+
+    .landing-logo-img {
+        width: 200px;
+        height: 200px;
+    }
+
+    .landing-icon-ring {
+        width: 220px;
+        height: 220px;
+    }
+
+    .landing-features {
+        gap: 25px;
+    }
+
+    .landing-feature-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .landing-feature-icon svg {
+        width: 25px;
+        height: 25px;
+    }
+
+    .landing-hint {
+        bottom: 40px;
+        font-size: 14px;
+    }
+}

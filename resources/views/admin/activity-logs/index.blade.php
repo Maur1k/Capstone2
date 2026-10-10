@@ -5,197 +5,164 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Officer Activity Logs - Admin Dashboard</title>
-    <link rel="stylesheet" href="/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/super-admin.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="{{ asset('css/activity-logs-admin.css') }}">
 </head>
 
-<body style="background:#f3f4f6; min-height:100vh;">
-    <div class="page-container-wide">
-        <!-- Header -->
-        <div class="content-wrapper">
-            <div class="page-header">
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
                 <div>
-                    <h2 class="page-title">Officer Activity Logs</h2>
-                    <p class="page-subtitle">Monitor officer activities and system usage</p>
+                    <h1 class="header-title">Officer Activity Logs</h1>
+                    <p class="header-subtitle">Monitor officer activities and system usage</p>
                 </div>
-                <div class="action-bar-right">
-                    <a href="{{ route('admin.dashboard') }}" class="btn-back">← Back to Dashboard</a>
-                    <form method="POST" action="{{ route('admin.logout') }}" style="display:inline;">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">Logout</button>
-                    </form>
+                <div class="header-actions">
+                    <a href="{{ route('admin.dashboard') }}" class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Statistics Cards -->
-        <div
-            style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px; margin-bottom:24px;">
-            <div style="background:#fff; border-radius:10px; padding:20px; box-shadow:0 8px 20px rgba(0,0,0,.06);">
-                <div style="display:flex; align-items:center; justify-content:space-between;">
-                    <div>
-                        <p style="margin:0; color:#6b7280; font-size:14px;">Total Activities</p>
-                        <h3 style="margin:8px 0 0 0; font-size:24px; color:#1f2937;">
-                            {{ number_format($stats['total_activities']) }}
-                        </h3>
+        <div class="stats-grid">
+            <div class="stats-card" data-filter="all" onclick="filterByActivity('all')">
+                <div class="stats-content">
+                    <div class="stats-info">
+                        <h3>{{ number_format($stats['total_activities']) }}</h3>
+                        <p>Total Activities</p>
                     </div>
-                    <div style="background:#e0f2fe; padding:12px; border-radius:8px;">
-                        <span style="font-size:20px;">📊</span>
+                    <div class="stats-icon">
+                        <i class="fas fa-chart-bar"></i>
                     </div>
                 </div>
             </div>
 
-            <div style="background:#fff; border-radius:10px; padding:20px; box-shadow:0 8px 20px rgba(0,0,0,.06);">
-                <div style="display:flex; align-items:center; justify-content:space-between;">
-                    <div>
-                        <p style="margin:0; color:#6b7280; font-size:14px;">Logins Today</p>
-                        <h3 style="margin:8px 0 0 0; font-size:24px; color:#10b981;">{{ $stats['logins_today'] }}</h3>
+            <div class="stats-card" data-filter="login" onclick="filterByActivity('login')">
+                <div class="stats-content">
+                    <div class="stats-info">
+                        <h3>{{ $stats['logins_today'] }}</h3>
+                        <p>Logins Today</p>
                     </div>
-                    <div style="background:#d1fae5; padding:12px; border-radius:8px;">
-                        <span style="font-size:20px;">🔑</span>
-                    </div>
-                </div>
-            </div>
-
-            <div style="background:#fff; border-radius:10px; padding:20px; box-shadow:0 8px 20px rgba(0,0,0,.06);">
-                <div style="display:flex; align-items:center; justify-content:space-between;">
-                    <div>
-                        <p style="margin:0; color:#6b7280; font-size:14px;">Status Changes Today</p>
-                        <h3 style="margin:8px 0 0 0; font-size:24px; color:#3b82f6;">
-                            {{ $stats['status_changes_today'] }}
-                        </h3>
-                    </div>
-                    <div style="background:#dbeafe; padding:12px; border-radius:8px;">
-                        <span style="font-size:20px;">🔄</span>
+                    <div class="stats-icon">
+                        <i class="fas fa-sign-in-alt"></i>
                     </div>
                 </div>
             </div>
 
-            <div style="background:#fff; border-radius:10px; padding:20px; box-shadow:0 8px 20px rgba(0,0,0,.06);">
-                <div style="display:flex; align-items:center; justify-content:space-between;">
-                    <div>
-                        <p style="margin:0; color:#6b7280; font-size:14px;">Active Officers</p>
-                        <h3 style="margin:8px 0 0 0; font-size:24px; color:#8b5cf6;">{{ $stats['active_officers'] }}
-                        </h3>
+            <div class="stats-card" data-filter="status_change" onclick="filterByActivity('status_change')">
+                <div class="stats-content">
+                    <div class="stats-info">
+                        <h3>{{ $stats['status_changes_today'] }}</h3>
+                        <p>Status Changes Today</p>
                     </div>
-                    <div style="background:#ede9fe; padding:12px; border-radius:8px;">
-                        <span style="font-size:20px;">👥</span>
+                    <div class="stats-icon">
+                        <i class="fas fa-exchange-alt"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Filters -->
-        <div
-            style="background:#fff; border-radius:10px; padding:20px; box-shadow:0 8px 20px rgba(0,0,0,.06); margin-bottom:24px;">
-            <h3 style="margin:0 0 16px 0;">Filters</h3>
-            <form method="GET" action="{{ route('admin.activity-logs.index') }}"
-                style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
-                <div>
-                    <label style="display:block; font-size:14px; margin-bottom:6px; font-weight:600;">Activity
-                        Type</label>
-                    <select name="activity_type"
-                        style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:6px;">
-                        <option value="">All Activities</option>
-                        @foreach($activityTypes as $type)
-                            <option value="{{ $type }}" {{ request('activity_type') == $type ? 'selected' : '' }}>
-                                {{ ucfirst(str_replace('_', ' ', $type)) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+        <div class="filter-card">
+            <h3>
+                <i class="fas fa-filter"></i>
+                Advanced Filters
+            </h3>
+            <form method="GET" action="{{ route('admin.activity-logs.index') }}">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Activity Type</label>
+                        <select name="activity_type" class="form-input">
+                            <option value="">All Activities</option>
+                            @foreach($activityTypes as $type)
+                                <option value="{{ $type }}" {{ request('activity_type') == $type ? 'selected' : '' }}>
+                                    {{ ucfirst(str_replace('_', ' ', $type)) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <div>
-                    <label style="display:block; font-size:14px; margin-bottom:6px; font-weight:600;">Officer</label>
-                    <select name="officer_id"
-                        style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:6px;">
-                        <option value="">All Officers</option>
-                        @foreach($officers as $officer)
-                            <option value="{{ $officer->id }}" {{ request('officer_id') == $officer->id ? 'selected' : '' }}>
-                                {{ $officer->name }} ({{ $officer->department }})
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label class="form-label">Officer</label>
+                        <select name="officer_id" class="form-input">
+                            <option value="">All Officers</option>
+                            @foreach($officers as $officer)
+                                <option value="{{ $officer->id }}" {{ request('officer_id') == $officer->id ? 'selected' : '' }}>
+                                    {{ $officer->name }} ({{ $officer->department }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <div>
-                    <label style="display:block; font-size:14px; margin-bottom:6px; font-weight:600;">Date From</label>
-                    <input type="date" name="date_from" value="{{ request('date_from') }}"
-                        style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:6px;">
-                </div>
+                    <div class="form-group">
+                        <label class="form-label">Date From</label>
+                        <input type="date" name="date_from" value="{{ request('date_from') }}" class="form-input">
+                    </div>
 
-                <div>
-                    <label style="display:block; font-size:14px; margin-bottom:6px; font-weight:600;">Date To</label>
-                    <input type="date" name="date_to" value="{{ request('date_to') }}"
-                        style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:6px;">
-                </div>
+                    <div class="form-group">
+                        <label class="form-label">Date To</label>
+                        <input type="date" name="date_to" value="{{ request('date_to') }}" class="form-input">
+                    </div>
 
-                <div style="display:flex; align-items:end; gap:8px;">
-                    <button type="submit"
-                        style="background:#0ea5e9; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">Filter</button>
-                    <a href="{{ route('admin.activity-logs.index') }}"
-                        style="background:#e5e7eb; color:#374151; text-decoration:none; padding:8px 16px; border-radius:6px;">Clear</a>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                            Apply Filters
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
 
-        <!-- Activity Logs Table -->
-        <div style="background:#fff; border-radius:10px; padding:16px; box-shadow:0 8px 20px rgba(0,0,0,.06);">
-            <h3 style="margin:0 0 16px 0;">Activity Logs</h3>
-
+        <div class="content">
             @if($activityLogs->count() > 0)
-                <div style="overflow-x:auto;">
-                    <table style="width:100%; border-collapse:separate; border-spacing:0 8px;">
+                <div class="table-wrapper">
+                    <table class="officers-table">
                         <thead>
                             <tr>
-                                <th style="text-align:left; padding:8px;">Officer</th>
-                                <th style="text-align:left; padding:8px;">Activity</th>
-                                <th style="text-align:left; padding:8px;">Description</th>
-                                <th style="text-align:left; padding:8px;">Target</th>
-                                <th style="text-align:left; padding:8px;">Time</th>
-                                <th style="text-align:left; padding:8px;">IP Address</th>
-                                <th style="text-align:left; padding:8px;">Actions</th>
+                                <th class="w-20p">Officer</th>
+                                <th class="w-15p">Activity</th>
+                                <th class="w-35p">Description</th>
+                                <th class="w-15p">Time</th>
+                                <th class="w-15p">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($activityLogs as $log)
-                                <tr style="background:#f9fafb;">
-                                    <td style="padding:10px 8px;">
-                                        <div>
-                                            <div style="font-weight:600;">{{ $log->admin->name }}</div>
-                                            <div style="font-size:12px; color:#6b7280;">{{ $log->admin->department }}</div>
+                                <tr>
+                                    <td>
+                                        <div class="officer-info">
+                                            <div class="officer-name">{{ $log->admin->name }}</div>
+                                            <div class="officer-email">{{ $log->admin->department }}</div>
                                         </div>
                                     </td>
-                                    <td style="padding:10px 8px;">
-                                        <div style="display:flex; align-items:center; gap:8px;">
-                                            <span style="font-size:16px;">{{ $log->activity_icon }}</span>
-                                            <span class="{{ $log->activity_color }}" style="font-weight:500;">
-                                                {{ ucfirst(str_replace('_', ' ', $log->activity_type)) }}
-                                            </span>
+                                    <td>
+                                        <span class="activity-badge {{ $log->activity_type }}">
+                                            <i
+                                                class="fas fa-{{ $log->activity_type === 'login' ? 'sign-in-alt' : ($log->activity_type === 'logout' ? 'sign-out-alt' : ($log->activity_type === 'status_change' ? 'exchange-alt' : ($log->activity_type === 'request_viewed' ? 'eye' : ($log->activity_type === 'request_created' ? 'plus' : ($log->activity_type === 'request_updated' ? 'edit' : 'circle'))))) }}"></i>
+                                            {{ ucfirst(str_replace('_', ' ', $log->activity_type)) }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="description-text">{{ $log->description }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="time-info">
+                                            <span class="time-main">{{ $log->created_at->format('M d, Y H:i') }}</span>
+                                            <span class="time-ago">{{ $log->formatted_time }}</span>
                                         </div>
                                     </td>
-                                    <td style="padding:10px 8px;">{{ $log->description }}</td>
-                                    <td style="padding:10px 8px;">
-                                        @if($log->target_type && $log->target_id)
-                                            <div
-                                                style="font-family:monospace; font-size:12px; background:#f3f4f6; padding:4px 8px; border-radius:4px;">
-                                                {{ $log->target_type }} #{{ $log->target_id }}
-                                            </div>
-                                        @else
-                                            <span style="color:#9ca3af;">-</span>
-                                        @endif
-                                    </td>
-                                    <td style="padding:10px 8px; color:#6b7280;">
-                                        <div>{{ $log->created_at->format('M d, Y H:i') }}</div>
-                                        <div style="font-size:12px;">{{ $log->formatted_time }}</div>
-                                    </td>
-                                    <td style="padding:10px 8px; font-family:monospace; font-size:12px; color:#6b7280;">
-                                        {{ $log->ip_address ?? '-' }}
-                                    </td>
-                                    <td style="padding:10px 8px;">
-                                        <a href="{{ route('admin.activity-logs.show', $log) }}"
-                                            style="background:#3b82f6; color:#fff; text-decoration:none; padding:4px 8px; border-radius:4px; font-size:12px;">
-                                            View Details
-                                        </a>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="{{ route('admin.activity-logs.show', $log) }}" class="action-btn edit">
+                                                <i class="fas fa-eye"></i>
+                                                View Details
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -203,17 +170,49 @@
                     </table>
                 </div>
 
-                <!-- Pagination -->
-                <div style="margin-top:20px; display:flex; justify-content:center;">
-                    {{ $activityLogs->appends(request()->query())->links() }}
+                <div class="pagination">
+                    @if($activityLogs->currentPage() > 1)
+                        <a href="{{ $activityLogs->previousPageUrl() }}" class="pagination-nav">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    @else
+                        <span class="pagination-nav disabled">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    @endif
+
+                    <div class="pagination-info">
+                        {{ $activityLogs->currentPage() }} / {{ $activityLogs->lastPage() }}
+                    </div>
+
+                    @if($activityLogs->hasMorePages())
+                        <a href="{{ $activityLogs->nextPageUrl() }}" class="pagination-nav">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    @else
+                        <span class="pagination-nav disabled">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    @endif
                 </div>
             @else
-                <div style="text-align:center; padding:40px; color:#6b7280;">
-                    <p style="margin:0;">No activity logs found.</p>
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <h4>No Activity Logs Found</h4>
+                    <p>Try adjusting your filters or check back later.</p>
                 </div>
             @endif
         </div>
     </div>
+
+    <script>
+        function filterByActivity(filterType) {
+            document.querySelectorAll('.stats-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+    </script>
 </body>
 
 </html>

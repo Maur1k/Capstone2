@@ -6,26 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Manage Services</title>
     <link rel="stylesheet" href="/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/services-admin.css') }}">
 </head>
 
-<body style="background:#f3f4f6; min-height:100vh;">
-    <div
-        style="max-width:1100px; margin:24px auto; background:#fff; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,.06); padding:20px;">
-        <div style="display:flex; align-items:center; justify-content:space-between;">
-            <h2 style="margin:0;">Manage Services</h2>
-            <a href="{{ route('admin.dashboard') }}">Back</a>
-        </div>
-        <p style="margin-top:10px; color:#6b7280;">Placeholder page. We will hook this to a Services CRUD next.</p>
-        <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:12px;">
-            <div
-                style="width:240px; background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:16px; text-align:center;">
-                <img src="/assets/icons/civil-services.png" alt="Civil" style="width:72px;height:72px;">
-                <div style="margin-top:8px; font-weight:600;">Civil Services</div>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div>
+                    <h1 class="header-title">Manage Services</h1>
+                    <p class="header-subtitle">Placeholder page. We will hook this to a Services CRUD next.</p>
+                </div>
+                <a href="{{ route('admin.dashboard') }}" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
             </div>
-            <div
-                style="width:240px; background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:16px; text-align:center;">
-                <img src="/assets/icons/transportation.png" alt="Transportation" style="width:72px;height:72px;">
-                <div style="margin-top:8px; font-weight:600;">City Transportation Regulation Unit</div>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <img src="/assets/icons/civil-services.png" alt="Civil">
+                </div>
+                <h3 class="service-title">Civil Services</h3>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <img src="/assets/icons/transportation.png" alt="Transportation">
+                </div>
+                <h3 class="service-title">City Transportation Regulation Unit</h3>
             </div>
         </div>
     </div>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GLB Wayfinding Tube Example</title>
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #1a1a1a; color: white; }
+        #info { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; z-index: 100; max-width: 300px; }
+        #canvas-container { width: 100%; height: 600px; border: 2px solid #333; border-radius: 8px; }
+        .controls { margin: 10px 0; }
+        button { background: #00ff00; color: black; border: none; padding: 8px 16px; margin: 5px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #00cc00; }
+        .status { color: #00ff00; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h3>🎯 GLB Wayfinding Tube Demo</h3>
+        <p class="status">✅ Wayfinding tube integrated with GLB model</p>
+        <div class="controls">
+            <button onclick="toggleAnimation()">Toggle Animation</button>
+            <button onclick="changeColor()">Change Color</button>
+            <button onclick="addMoreTubes()">Add More Tubes</button>
+        </div>
+        <p><strong>Features:</strong></p>
+        <ul>
+            <li>✅ 3D Tube Geometry</li>
+            <li>✅ Directional Arrows</li>
+            <li>✅ Pulse Animation</li>
+            <li>✅ GLB Model Integration</li>
+            <li>✅ Interactive Controls</li>
+        </ul>
+        <p><strong>API Endpoint:</strong><br>
+        <code>/api/poi/9</code></p>
+    </div>
+    <div id="canvas-container"></div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.149.0/build/three.module.js"
+        }
+    }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        
+        renderer.setSize(window.innerWidth - 40, window.innerHeight - 120);
+        renderer.setClearColor(0x222222);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(50, 50, 50);
+        directionalLight.castShadow = true;
+        scene.add(directionalLight);
+
+        // Create a simple GLB-like environment (ground plane)
+        const groundGeometry = new THREE.PlaneGeometry(200, 200);
+        const groundMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        // Add some building-like structures
+        const buildingGeometry = new THREE.BoxGeometry(20, 30, 20);
+        const buildingMaterial = new THREE.MeshLambertMaterial({ color: 0x666666 });
+        
+        const buildings = [
+            { x: -50, z: -50 },
+            { x: 50, z: -50 },
+            { x: -50, z: 50 },
+            { x: 50, z: 50 }
+        ];
+        
+        buildings.forEach(pos => {
+            const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
+            building.position.set(pos.x, 15, pos.z);
+            building.castShadow = true;
+            scene.add(building);
+        });
+
+        // Wayfinding tube data (from your API)
+        const wayfindingTubeData = {
+            id: 9,
+            name: "Wayfinding Tube",
+            category: "Navigation",
+            x: 600,
+            y: 400,
+            meta: {
+                geometry_type: "tube",
+                tube_properties: {
+                    radius: 12,
+                    height: 120,
+                    segments: 16,
+                    color: "#00ff00",
+                    opacity: 0.8,
+                    animated: true,
+                    pulse_speed: 2.0,
+                    material: "emissive"
+                },
+                wayfinding_features: ["direction_arrows", "distance_display"],
+                modelPosition: {
+                    x: 0,
+                    y: 0.5,
+                    z: 0
+                }
+            }
+        };
+
+        // Create wayfinding tube
+        function createWayfindingTube(poiData) {
+            const props = poiData.meta.tube_properties;
+            const modelPos = poiData.meta.modelPosition;
+            
+            // Create tube geometry
+            const geometry = new THREE.CylinderGeometry(
+                props.radius || 12, // Reduced default radius
+                props.radius || 12,
+                props.height || 120, // Reduced default height
+                props.segments || 16
+            );
+            
+            // Create emissive material
+            const material = new THREE.MeshBasicMaterial({
+                color: props.color,
+                transparent: true,
+                opacity: props.opacity,
+                emissive: new THREE.Color(props.color),
+                emissiveIntensity: 0.3,
+                side: THREE.DoubleSide
+            });
+            
+            const tube = new THREE.Mesh(geometry, material);
+            tube.position.set(modelPos.x, modelPos.y + props.height / 2, modelPos.z);
+            tube.castShadow = true;
+            
+            // Add directional arrows
+            if (poiData.meta.wayfinding_features.includes('direction_arrows')) {
+                addDirectionArrows(tube, props);
+            }
+            
+            // Add wayfinding label
+            if (poiData.meta.wayfinding_features.includes('distance_display')) {
+                addWayfindingLabel(tube, poiData);
+            }
+            
+            // Add animation data
+            tube.userData = {
+                animation: {
+                    pulseSpeed: props.pulse_speed,
+                    originalScale: tube.scale.clone(),
+                    time: 0,
+                    enabled: props.animated
+                },
+                poi: poiData
+            };
+            
+            return tube;
+        }
+
+        // Add directional arrows
+        function addDirectionArrows(tube, props) {
+            const arrowGeometry = new THREE.ConeGeometry(5, 15, 8);
+            const arrowMaterial = new THREE.MeshBasicMaterial({
+                color: props.color,
+                emissive: new THREE.Color(props.color),
+                emissiveIntensity: 0.5
+            });
+            
+            const directions = [
+                { name: 'north', rotation: [0, 0, 0], position: [0, 0, props.radius + 10] },
+                { name: 'south', rotation: [0, Math.PI, 0], position: [0, 0, -props.radius - 10] },
+                { name: 'east', rotation: [0, -Math.PI/2, 0], position: [props.radius + 10, 0, 0] },
+                { name: 'west', rotation: [0, Math.PI/2, 0], position: [-props.radius - 10, 0, 0] }
+            ];
+            
+            directions.forEach(dir => {
+                const arrow = new THREE.Mesh(arrowGeometry, arrowMaterial);
+                arrow.rotation.set(...dir.rotation);
+                arrow.position.set(...dir.position);
+                arrow.userData = { direction: dir.name, wayfinding: true };
+                tube.add(arrow);
+            });
+        }
+
+        // Add wayfinding label
+        function addWayfindingLabel(tube, poi) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 256;
+            canvas.height = 64;
+            
+            context.fillStyle = 'rgba(0, 0, 0, 0.8)';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            
+            context.fillStyle = '#00ff00';
+            context.font = '16px Arial';
+            context.textAlign = 'center';
+            context.fillText(poi.name, canvas.width / 2, 25);
+            context.fillText('Wayfinding Point', canvas.width / 2, 45);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.SpriteMaterial({ 
+                map: texture, 
+                transparent: true,
+                alphaTest: 0.1
+            });
+            
+            const sprite = new THREE.Sprite(material);
+            sprite.scale.set(50, 12.5, 1);
+            sprite.position.set(0, tube.geometry.parameters.height + 20, 0);
+            
+            tube.add(sprite);
+        }
+
+        // Create the wayfinding tube
+        const wayfindingTube = createWayfindingTube(wayfindingTubeData);
+        scene.add(wayfindingTube);
+
+        // Camera positioning
+        camera.position.set(100, 80, 100);
+        camera.lookAt(0, 50, 0);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Animate wayfinding tubes
+            scene.children.forEach(obj => {
+                if (obj.userData && obj.userData.animation && obj.userData.animation.enabled) {
+                    const anim = obj.userData.animation;
+                    anim.time += 0.016;
+                    
+                    // Pulse animation
+                    const pulse = Math.sin(anim.time * anim.pulseSpeed) * 0.1 + 1.0;
+                    obj.scale.copy(anim.originalScale).multiplyScalar(pulse);
+                    
+                    // Rotate arrows
+                    obj.children.forEach(child => {
+                        if (child.userData && child.userData.wayfinding) {
+                            child.rotation.y += 0.01;
+                        }
+                    });
+                }
+            });
+            
+            renderer.render(scene, camera);
+        }
+
+        // Interactive controls
+        window.toggleAnimation = function() {
+            if (wayfindingTube.userData.animation) {
+                wayfindingTube.userData.animation.enabled = !wayfindingTube.userData.animation.enabled;
+                console.log('Animation:', wayfindingTube.userData.animation.enabled ? 'ON' : 'OFF');
+            }
+        };
+
+        window.changeColor = function() {
+            const colors = ['#00ff00', '#ff0000', '#0066ff', '#ff6600', '#ff00ff'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            wayfindingTube.material.color.setHex(randomColor.replace('#', '0x'));
+            wayfindingTube.material.emissive.setHex(randomColor.replace('#', '0x'));
+            
+            // Update arrows
+            wayfindingTube.children.forEach(child => {
+                if (child.userData && child.userData.wayfinding) {
+                    child.material.color.setHex(randomColor.replace('#', '0x'));
+                    child.material.emissive.setHex(randomColor.replace('#', '0x'));
+                }
+            });
+            
+            console.log('Changed color to:', randomColor);
+        };
+
+        window.addMoreTubes = function() {
+            const positions = [
+                { x: -30, z: -30 },
+                { x: 30, z: -30 },
+                { x: -30, z: 30 },
+                { x: 30, z: 30 }
+            ];
+            
+            positions.forEach((pos, index) => {
+                const newTubeData = {
+                    ...wayfindingTubeData,
+                    name: `Wayfinding Tube ${index + 2}`,
+                    meta: {
+                        ...wayfindingTubeData.meta,
+                        modelPosition: { x: pos.x, y: 0.5, z: pos.z },
+                        tube_properties: {
+                            ...wayfindingTubeData.meta.tube_properties,
+                            color: ['#ff0000', '#0066ff', '#ff6600', '#ff00ff'][index]
+                        }
+                    }
+                };
+                
+                const newTube = createWayfindingTube(newTubeData);
+                scene.add(newTube);
+            });
+            
+            console.log('Added 4 more wayfinding tubes');
+        };
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = (window.innerWidth - 40) / (window.innerHeight - 120);
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth - 40, window.innerHeight - 120);
+        });
+
+        // Start animation
+        animate();
+        
+        console.log('🎯 GLB Wayfinding Tube Demo loaded successfully!');
+        console.log('Wayfinding tube data:', wayfindingTubeData);
+    </script>
+</body>
+</html>
